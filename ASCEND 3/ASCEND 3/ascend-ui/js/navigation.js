@@ -16,18 +16,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Role-based Logo Redirection
-    const navLogo = document.querySelector('.nav-logo');
-    if (navLogo) {
-        if (role === 'admin') {
-            navLogo.setAttribute('href', 'admin-dashboard.html');
-        } else if (role === 'mentor' || role === 'alumni') {
-            navLogo.setAttribute('href', 'mentor-dashboard.html');
-        } else if (role === 'student') {
-            navLogo.setAttribute('href', 'dashboard.html');
-        } else {
-            navLogo.setAttribute('href', 'index.html');
-        }
-    }
+    window.updateLogoLinks = function () {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const role = user ? user.role : 'student'; // Default to student if role not found, or handle as guest
+
+        // Select all logo elements (header and sidebar)
+        const logos = document.querySelectorAll('.nav-logo, .sidebar-logo');
+
+        logos.forEach(logo => {
+            if (role === 'admin') {
+                logo.setAttribute('href', 'admin-dashboard.html');
+            } else if (role === 'mentor' || role === 'alumni') {
+                logo.setAttribute('href', 'mentor-dashboard.html');
+            } else if (role === 'student') {
+                logo.setAttribute('href', 'dashboard.html');
+            } else {
+                logo.setAttribute('href', 'index.html');
+            }
+        });
+    };
+
+    // Initial call
+    window.updateLogoLinks();
 
     // Update Profile Link (if needed, though student-profile.html is shared but might need role-specific view later)
     // For now, student-profile.html handles display based on data, so link is fine.

@@ -22,6 +22,11 @@ async function loadComponent(elementId, filePath) {
 
         // Populate user profile from localStorage
         updateUserProfile();
+
+        // Update Logo Links (if navigation.js is loaded)
+        if (window.updateLogoLinks) {
+            window.updateLogoLinks();
+        }
     } catch (error) {
         console.error('Error loading component:', error);
     }
