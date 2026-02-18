@@ -14,7 +14,8 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'auth.login' 
 login.login_view = 'auth.login' 
-CORS(app, resources={r"/*": {"origins": "*", "allow_headers": ["Content-Type", "Authorization"]}})
+# CORS configuration - Allow all origins for development
+CORS(app)
 
 @login.request_loader
 def load_user_from_request(request):

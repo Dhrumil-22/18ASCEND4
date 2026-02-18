@@ -406,12 +406,16 @@ def get_mentor_dashboard():
             'bounty': q.bounty
         })
 
+    # Total Unanswered Count (Urgent + General)
+    total_unanswered_count = Question.query.outerjoin(Reply).filter(Reply.id == None).count()
+
     return jsonify({
         'user_name': user_name,
         'stats': {
             'mentees': mentees_count,
             'requests': requests_count,
-            'sessions': sessions_count
+            'sessions': sessions_count,
+            'unanswered_questions': total_unanswered_count
         },
         'questions': questions_data,
         'urgent_questions': urgent_data

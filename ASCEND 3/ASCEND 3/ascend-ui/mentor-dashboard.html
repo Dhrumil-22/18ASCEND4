@@ -86,6 +86,19 @@
             margin-top: 6px;
             flex-shrink: 0;
         }
+
+        #debugStatus {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.1);
+            /* Visible debug */
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #fff;
+            display: none;
+            /* Hidden after debug */
+        }
     </style>
 </head>
 
@@ -167,8 +180,8 @@
                     </div>
                 </div>
 
-                <div class="dashboard-grid-layout">
-                    <div class="dashboard-main-col">
+                <div style="display: flex; flex-direction: column;">
+                    <div class="dashboard-main-col" style="width: 100%;">
                         <!-- Quick Actions -->
                         <div class="section-header">
                             <h2 class="section-title">Quick Actions</h2>
@@ -228,6 +241,12 @@
                     </div>
                 </div>
 
+                <!-- Debug Output Box -->
+                <div id="debugStatus">
+                    <strong>System Status (Always Visible):</strong>
+                    <div id="debugMessages">Waiting for JS...</div>
+                </div>
+
             </div>
             <!-- Footer -->
             <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
@@ -264,6 +283,37 @@
 
     <script src="js/navigation.js"></script>
     <script>
+        // Global Error Handler
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            const debugEl = document.getElementById('debugMessages');
+            if (debugEl) {
+                debugEl.innerHTML += `<div style="color: red; margin-top: 4px;">GLOBAL ERROR: ${msg} at line ${lineNo}</div>`;
+            }
+            return false;
+        };
+
+        // Debug helper
+        function logDebug(msg, isError = false) {
+            console.log("[Dashboard Debug]", msg);
+            const msgEl = document.getElementById('debugMessages');
+            if (msgEl) {
+                const color = isError ? '#ff6b6b' : '#00ff00';
+                msgEl.innerHTML += `<div style="color: ${color}; margin-top: 4px;">${new Date().toLocaleTimeString()}: ${msg}</div>`;
+            }
+        }
+
+        // Auth Check Helper
+        function checkAuth(response) {
+            if (response.status === 401 || response.status === 403) {
+                logDebug("Auth failed (401/403). Redirecting to login...", true);
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user');
+                alert("Session expired. Please login again.");
+                window.location.href = 'login.html';
+                throw new Error("Unauthorized");
+            }
+            return response;
+        }
 
         // Modal Functions
         const modal = document.getElementById('answerModal');
@@ -280,12 +330,10 @@
             answerForm.reset();
         }
 
-        // Close modal when clicking outside
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeAnswerModal();
         });
 
-        // Handle Answer Submission
         answerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const questionId = document.getElementById('modalQuestionId').value;
@@ -302,10 +350,11 @@
                     body: JSON.stringify({ content })
                 });
 
+                checkAuth(response);
+
                 if (response.ok) {
                     alert('Answer submitted successfully!');
                     closeAnswerModal();
-                    // Refresh dashboard data
                     location.reload();
                 } else {
                     const data = await response.json();
@@ -317,21 +366,26 @@
             }
         });
 
-        // Initialize Lucide icons
+        // Initialize Lucide Icons
         lucide.createIcons();
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            window.location.href = 'index.html';
+        // Logout Logic (Using Event Delegation for Dynamically Loaded Sidebar)
+        document.addEventListener('click', function (e) {
+            if (e.target && (e.target.id === 'logoutBtn' || e.target.closest('#logoutBtn'))) {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            }
         });
 
-        // Fetch Dashboard Data
         const token = localStorage.getItem('auth_token');
         const userStr = localStorage.getItem('user');
 
         document.addEventListener('DOMContentLoaded', async () => {
+            logDebug("Script started (Fixed Version). Token length: " + (token ? token.length : "None"));
+
             if (!token) {
+                logDebug("No token found. Redirecting...");
                 window.location.href = 'login.html';
                 return;
             }
@@ -350,36 +404,61 @@
                 console.error("User parse error", e);
             }
 
+            // 1. Fetch Dashboard Stats
+            logDebug("Fetching stats...");
             try {
-                // 1. Fetch Dashboard Stats
-                const dashboardResp = await fetch('http://127.0.0.1:5000/api/mentor/dashboard', {
+                const dashboardResp = await fetch('http://127.0.0.1:5000/api/mentor/dashboard?t=' + Date.now(), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
+
+                checkAuth(dashboardResp);
 
                 if (dashboardResp.ok) {
                     const data = await dashboardResp.json();
+                    logDebug("Stats received");
 
                     // Update Stats
                     const statPending = document.getElementById('statPending');
-                    if (statPending) statPending.textContent = data.questions ? data.questions.length : 0;
+                    if (statPending) {
+                        // Use calculated total from backend if available, else fallback
+                        const pendingCount = (data.stats && data.stats.unanswered_questions !== undefined)
+                            ? data.stats.unanswered_questions
+                            : (data.questions ? data.questions.length : 0);
+                        statPending.textContent = pendingCount;
+                    }
 
                     const statRequests = document.getElementById('statRequests');
-                    if (statRequests) statRequests.textContent = data.stats.requests;
+                    if (statRequests) statRequests.textContent = (data.stats && data.stats.requests !== undefined) ? data.stats.requests : 0;
 
                     const statConnections = document.getElementById('statConnections');
-                    if (statConnections) statConnections.textContent = data.stats.mentees;
+                    if (statConnections) statConnections.textContent = (data.stats && data.stats.mentees !== undefined) ? data.stats.mentees : 0;
 
                 } else {
+                    const errText = `Stats API Failed: ${dashboardResp.status} ${dashboardResp.statusText}`;
+                    logDebug(errText, true);
                     console.error("Dashboard stats fetch failed");
                 }
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+                logDebug(`Stats network error: ${error.message}`, true);
+            }
 
-                // 2. Fetch Questions (Using the same endpoint as All Questions Page for consistency)
-                const questionsResp = await fetch('http://127.0.0.1:5000/api/mentor/questions', {
+            // 2. Fetch Questions
+            logDebug("Fetching questions...");
+            try {
+                const questionsResp = await fetch('http://127.0.0.1:5000/api/mentor/questions?t=' + Date.now(), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
+                checkAuth(questionsResp);
+
                 if (questionsResp.ok) {
                     const allQuestions = await questionsResp.json();
+                    logDebug(`Questions received: ${allQuestions.length}`);
+
+                    if (!Array.isArray(allQuestions)) {
+                        throw new Error("Invalid format received");
+                    }
 
                     // Filter Urgent and General
                     const urgentQuestions = allQuestions.filter(q => q.is_urgent);
@@ -393,7 +472,7 @@
                     } else {
                         urgentQuestions.slice(0, 5).forEach(q => {
                             const html = `
-                                <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; background: rgba(255, 215, 0, 0.05);">
+                                <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; transition: background 0.2s;">
                                     <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid #FFD700; color: #FFD700;">${q.author_initials || '??'}</div>
                                     <div style="flex: 1;">
                                         <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: #FFD700;">
@@ -465,13 +544,17 @@
                     lucide.createIcons();
 
                 } else {
+                    const errText = `Questions API Failed: ${questionsResp.status}`;
+                    logDebug(errText, true);
                     console.error('Failed to load questions');
-                    document.getElementById('questionsContainer').innerHTML = '<p style="color:red; text-align:center; padding: 2rem;">Failed to load questions data.</p>';
+                    document.getElementById('questionsContainer').innerHTML = `<p style="color:red; text-align:center; padding: 2rem;">${errText}</p>`;
                 }
 
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
-                alert("Error loading dashboard: " + error.message);
+                const errText = `Questions Network Error: ${error.message}`;
+                logDebug(errText, true);
+                document.getElementById('questionsContainer').innerHTML = `<p style="color:red; text-align:center; padding: 2rem;">${errText}</p>`;
             }
         });
     </script>
