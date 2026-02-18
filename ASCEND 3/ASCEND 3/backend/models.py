@@ -27,6 +27,8 @@ class User(UserMixin, db.Model):
     threads = db.relationship('DiscussionThread', backref='author', lazy='dynamic')
     profile_info = db.relationship('ProfileInfo', backref='user', uselist=False)
     experiences = db.relationship('Experience', backref='user', lazy='dynamic')
+    messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy='dynamic')
+    messages_received = db.relationship('Message', foreign_keys='Message.recipient_id', backref='recipient', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -167,3 +169,12 @@ class MentorshipRequest(db.Model):
     # Relationships
     student = db.relationship('User', foreign_keys=[student_id], backref='mentorship_requests_sent')
     mentor = db.relationship('User', foreign_keys=[mentor_id], backref='mentorship_requests_received')
+
+class Message(db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from models import User, Company, CareerPath, ProfileInfo, Experience, Roadmap, DiscussionThread, Question, Reply, MentorshipRequest, db
+from models import User, Company, CareerPath, ProfileInfo, Experience, Roadmap, DiscussionThread, Question, Reply, MentorshipRequest, Message, db
+from sqlalchemy import or_
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -187,20 +188,7 @@ def get_connected_mentors():
         })
     return jsonify(mentors_data)
 
-@api.route('/messages', methods=['POST'])
-@login_required
-def send_message():
-    data = request.get_json()
-    recipient_id = data.get('recipient_id')
-    content = data.get('content')
-    
-    if not recipient_id or not content:
-        return jsonify({'error': 'Recipient and content are required'}), 400
-        
-    # In a real app, we would save this to a Message model.
-    # For now, we simulate success.
-    
-    return jsonify({'message': 'Message sent successfully'}), 200
+
 
 @api.route('/companies', methods=['GET'])
 def get_companies():
@@ -640,3 +628,57 @@ def get_admin_content():
         'paths_count': CareerPath.query.count(),
         'roadmaps_count': Roadmap.query.count()
     })
+
+@api.route('/messages/<int:partner_id>', methods=['GET'])
+@login_required
+def get_messages(partner_id):
+    # Fetch conversation between current_user and partner_id
+    messages = Message.query.filter(
+        or_(
+            (Message.sender_id == current_user.id) & (Message.recipient_id == partner_id),
+            (Message.sender_id == partner_id) & (Message.recipient_id == current_user.id)
+        )
+    ).order_by(Message.created_at.asc()).all()
+    
+    msgs_data = []
+    for m in messages:
+        msgs_data.append({
+            'id': m.id,
+            'sender_id': m.sender_id,
+            'recipient_id': m.recipient_id,
+            'content': m.content,
+            'timestamp': m.created_at.strftime("%I:%M %p"),
+            'date': m.created_at.strftime("%Y-%m-%d"),
+            'is_me': m.sender_id == current_user.id,
+            'is_read': m.is_read
+        })
+        
+    return jsonify(msgs_data)
+
+@api.route('/messages', methods=['POST'])
+@login_required
+def send_message():
+    data = request.get_json()
+    recipient_id = data.get('recipient_id')
+    content = data.get('content')
+    
+    if not recipient_id or not content:
+        return jsonify({'error': 'Recipient and content are required'}), 400
+        
+    msg = Message(
+        sender_id=current_user.id,
+        recipient_id=recipient_id,
+        content=content
+    )
+    db.session.add(msg)
+    db.session.commit()
+    
+    return jsonify({
+        'message': 'Sent successfully',
+        'data': {
+            'id': msg.id,
+            'content': msg.content,
+            'timestamp': msg.created_at.strftime("%I:%M %p"),
+            'is_me': True
+        }
+    }), 201

@@ -404,7 +404,7 @@
                                 <div class="mentor-bio">
                                     ${m.bio}
                                 </div>
-                                <button class="btn btn-primary" onclick="openMessageModal(${m.id}, '${m.name.replace(/'/g, "\\'")}')">
+                                <button class="btn btn-primary" onclick="window.location.href='student-messages.html?partner_id=' + m.id">
                                     Message
                                 </button>
                             </div>
