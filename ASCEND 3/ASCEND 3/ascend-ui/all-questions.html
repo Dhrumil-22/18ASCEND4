@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Questions - ASCEND</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+    <style>
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .question-card:hover {
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .question-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .question-content {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            line-clamp: 3;
+        }
+
+        .question-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .stats-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(77, 163, 255, 0.1);
+            border-radius: 20px;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Integrated Navigation Placeholder (Loads Sidebar and Header) -->
+    <div id="navigation-placeholder" data-src="dashboard-navigation.html"></div>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+        <div class="page-container">
+            <div class="main-content">
+                <div class="page-header" style="display: flex; gap: 500px;">
+                    <div class="page-header-content">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                            <a href="ask-question.html"
+                                style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                                <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                                Back
+                            </a>
+                        </div>
+                        <h1 class="page-title">Community Questions</h1>
+                        <p class="page-subtitle">Browse all mentorship questions and answers from the community.</p>
+                    </div>
+                    <div class="page-actions">
+                        <a href="ask-question.html" class="btn btn-primary">Ask a Question</a>
+                    </div>
+                </div>
+
+                <div id="questionsList" class="questions-list">
+                    <!-- Questions will be loaded here -->
+                    <p style="color: var(--text-secondary); text-align: center; padding: 4rem;">Loading questions...</p>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            // Fetch All Questions
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/questions', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const questions = await response.json();
+                    const container = document.getElementById('questionsList');
+                    container.innerHTML = '';
+
+                    if (questions.length === 0) {
+                        container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 4rem;">No questions found.</p>';
+                        return;
+                    }
+
+                    questions.forEach(q => {
+                        const answersCount = q.replies ? q.replies.length : 0;
+                        const html = `
+                            <div class="question-card" onclick="window.location.href='question-detail.html?id=${q.id}'">
+                                <div class="question-header">
+                                    <h3 class="question-title">${q.title}</h3>
+                                    <span style="color: var(--text-tertiary); font-size: 0.875rem;">${q.created_at}</span>
+                                </div>
+                                <div class="question-content">
+                                    ${q.content}
+                                </div>
+                                <div class="question-footer">
+                                    <div class="author-info">
+                                        <div class="author-avatar">${q.author_initials || 'AN'}</div>
+                                        <div>
+                                            <div style="font-weight: 500; color: var(--text-primary); font-size: 0.9rem;">${q.author_name}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-tertiary);">Student</div>
+                                        </div>
+                                    </div>
+                                    <div class="stats-badge">
+                                        <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                                        <span>${answersCount} Answers</span>
+                                    </div>
+                                </div>
+                            </div>
+                         `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    });
+                    lucide.createIcons();
+
+                    // Manually highlight "Ask Questions" in sidebar since URL doesn't match
+                    const sidebarLinks = document.querySelectorAll('.sidebar-nav-item');
+                    sidebarLinks.forEach(link => {
+                        if (link.getAttribute('href') === 'ask-question.html') {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+                document.getElementById('questionsList').innerHTML = '<p style="color: var(--accent-red); text-align: center;">Failed to load questions.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

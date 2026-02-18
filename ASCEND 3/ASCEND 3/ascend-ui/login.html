@@ -18,10 +18,13 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 
 <body>
+
     <div class="auth-page">
+        <!-- ... (unchanged content skipped for brevity in tool call, but I need to be careful with replace_file_content range. I'll split this if needed. Let's do CSS first) -->
         <div class="bg-glow"></div>
 
         <div class="auth-card">
@@ -34,23 +37,6 @@
             </div>
 
             <form class="auth-form" id="authForm">
-                <div class="input-group">
-                    <label class="input-label">Select your role</label>
-                    <div class="role-selector">
-                        <div class="role-option selected" data-role="student">
-                            <div class="role-option-label">Student</div>
-                            <div class="role-option-desc">Learning</div>
-                        </div>
-                        <div class="role-option" data-role="mentor">
-                            <div class="role-option-label">Mentor</div>
-                            <div class="role-option-desc">Guiding</div>
-                        </div>
-                        <div class="role-option" data-role="admin">
-                            <div class="role-option-label">Admin</div>
-                            <div class="role-option-desc">Managing</div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="input-group">
                     <label class="input-label" for="email">Email address</label>
@@ -84,36 +70,67 @@
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <!-- Script removed: js/app.js (file not found) -->
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Role selection
-        document.querySelectorAll('.role-option').forEach(option => {
-            option.addEventListener('click', function () {
-                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
+        // Role Selection Logic
+        const roleOptions = document.querySelectorAll('.role-option');
+        roleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                roleOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
             });
         });
 
-        // Form submission
-        document.getElementById('authForm').addEventListener('submit', function (e) {
+        // Corrected ID to match the form
+        document.getElementById('authForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const selectedRole = document.querySelector('.role-option.selected').dataset.role;
+
             const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            // Store user info (in real app, this would be authenticated)
-            localStorage.setItem('userRole', selectedRole);
-            localStorage.setItem('userEmail', email);
+            // Get selected role - although backend handles auth, role might be useful for redirection
+            const selectedRoleElement = document.querySelector('.role-option.selected');
+            const role = selectedRoleElement ? selectedRoleElement.dataset.role : 'student';
 
-            // Redirect based on role
-            if (selectedRole === 'admin') {
-                window.location.href = 'admin-dashboard.html';
-            } else if (selectedRole === 'mentor') {
-                window.location.href = 'alumni-dashboard.html';
-            } else {
-                window.location.href = 'dashboard.html';
+            try {
+                const response = await fetch('http://127.0.0.1:5000/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store user info and token
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('auth_token', data.token);
+
+                    // Redirect based on role
+                    if (data.user.role === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else if (data.user.role === 'alumni') {
+                        window.location.href = 'alumni-dashboard.html';
+                    } else if (data.user.role === 'mentor') {
+                        window.location.href = 'mentor-dashboard.html';
+                    } else {
+                        // Default for students
+                        window.location.href = 'dashboard.html';
+                    }
+                } else {
+                    alert(data.error || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Login Error: ' + error.message + '\n\nEnsure backend is running at http://127.0.0.1:5000');
             }
         });
     </script>

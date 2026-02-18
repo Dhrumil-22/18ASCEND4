@@ -9,85 +9,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
-            <div class="sidebar-logo-text">ASCEND</div>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="ask-question.html" class="sidebar-nav-item">
-                <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Ask Question</span>
-            </a>
-            <a href="career-exploration.html" class="sidebar-nav-item">
-                <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Career Exploration</span>
-            </a>
-            <a href="discussion.html" class="sidebar-nav-item">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Discussion</span>
-            </a>
-            <a href="student-profile.html" class="sidebar-nav-item">
-                <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>My Profile</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-nav-item" id="collapseBtn">
-                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Collapse</span>
-            </div>
-            <a href="index.html" class="sidebar-nav-item">
-                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="header-search">
-            <div class="input-icon">
-                <i data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                <input type="text" class="input" placeholder="Search...">
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <button class="btn btn-secondary btn-sm">
-                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-            </button>
-            <button class="btn btn-primary" onclick="window.location.href='ask-question.html'">
-                <i data-lucide="zap" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                Ask Question
-            </button>
-            <div class="header-user">
-                <div class="header-user-info">
-                    <div class="header-user-name">Alex Johnson</div>
-                    <div class="header-user-role">Student</div>
-                </div>
-                <div class="avatar avatar-md">AJ</div>
-            </div>
-        </div>
-    </header>
+    <!-- Integrated Navigation Placeholder (Loads Sidebar and Header) -->
+    <div id="navigation-placeholder" data-src="dashboard-navigation.html"></div>
 
     <!-- Main Content -->
     <main class="main-layout">
@@ -108,6 +46,7 @@
 
                 <!-- Tabs -->
                 <div class="tabs">
+                    <!--
                     <div class="tab active" data-tab="companies">
                         <i data-lucide="building-2" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
                         Companies
@@ -120,388 +59,53 @@
                         <i data-lucide="briefcase" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
                         Experiences
                     </div>
-                    <div class="tab" data-tab="roadmaps">
+                    -->
+                    <div class="tab active" data-tab="roadmaps">
                         <i data-lucide="map" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
                         Roadmaps
                     </div>
                 </div>
 
-                <!-- Tab Content: Companies -->
+                <!--
+                
                 <div class="tab-content active" id="companies">
-                    <div class="company-grid">
-                        <div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">G</div>
-                                <div class="company-info">
-                                    <div class="company-name">Google</div>
-                                    <div class="company-rating">
-                                        <i data-lucide="star"
-                                            style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
-                                        <span>4.5</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="company-meta">
-                                <i data-lucide="users" style="width: 16px; height: 16px; stroke-width: 1.5;"></i>
-                                <span>156 open roles</span>
-                            </div>
-                            <div class="company-footer">
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Company details coming soon!')">Explore →</button>
-                            </div>
-                        </div>
-
-                        <div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">M</div>
-                                <div class="company-info">
-                                    <div class="company-name">Microsoft</div>
-                                    <div class="company-rating">
-                                        <i data-lucide="star"
-                                            style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
-                                        <span>4.7</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="company-meta">
-                                <span class="icon">👥</span>
-                                <span>142 open roles</span>
-                            </div>
-                            <div class="company-footer">
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Company details coming soon!')">Explore →</button>
-                            </div>
-                        </div>
-
-                        <div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">A</div>
-                                <div class="company-info">
-                                    <div class="company-name">Amazon</div>
-                                    <div class="company-rating">
-                                        <i data-lucide="star"
-                                            style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
-                                        <span>4.5</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="company-meta">
-                                <span class="icon">👥</span>
-                                <span>198 open roles</span>
-                            </div>
-                            <div class="company-footer">
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Company details coming soon!')">Explore →</button>
-                            </div>
-                        </div>
-
-                        <div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">GS</div>
-                                <div class="company-info">
-                                    <div class="company-name">Goldman Sachs</div>
-                                    <div class="company-rating">
-                                        <i data-lucide="star"
-                                            style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
-                                        <span>4.6</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="company-meta">
-                                <span class="icon">👥</span>
-                                <span>87 open roles</span>
-                            </div>
-                            <div class="company-footer">
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Company details coming soon!')">Explore →</button>
-                            </div>
-                        </div>
-
-                        <div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">Mc</div>
-                                <div class="company-info">
-                                    <div class="company-name">McKinsey</div>
-                                    <div class="company-rating">
-                                        <i data-lucide="star"
-                                            style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
-                                        <span>4.7</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="company-meta">
-                                <span class="icon">👥</span>
-                                <span>64 open roles</span>
-                            </div>
-                            <div class="company-footer">
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Company details coming soon!')">Explore →</button>
-                            </div>
-                        </div>
-
-                        <div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">Ap</div>
-                                <div class="company-info">
-                                    <div class="company-name">Apple</div>
-                                    <div class="company-rating">
-                                        <i data-lucide="star"
-                                            style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
-                                        <span>4.8</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="company-meta">
-                                <span class="icon">👥</span>
-                                <span>134 open roles</span>
-                            </div>
-                            <div class="company-footer">
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Company details coming soon!')">Explore →</button>
-                            </div>
-                        </div>
+                    <div class="company-grid" id="companiesContainer">
+                        <p style="padding: 20px; text-align: center; color: var(--text-secondary);">Loading companies...
+                        </p>
                     </div>
                 </div>
 
-                <!-- Tab Content: Career Paths -->
+          
                 <div class="tab-content" id="paths">
-                    <div class="company-grid">
-                        <div class="card card-interactive">
-                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Software Engineering
-                            </h3>
-                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                <span class="badge badge-secondary">Junior</span>
-                                <span class="badge badge-secondary">Mid</span>
-                                <span class="badge badge-secondary">Senior</span>
-                                <span class="badge badge-secondary">Staff</span>
-                                <span class="badge badge-secondary">Principal</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.875rem; color: var(--text-secondary);">45 mentors</span>
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Career path details coming soon!')">View Full Path</button>
-                            </div>
-                        </div>
-
-                        <div class="card card-interactive">
-                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Product Management
-                            </h3>
-                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                <span class="badge badge-secondary">APM</span>
-                                <span class="badge badge-secondary">PM</span>
-                                <span class="badge badge-secondary">Senior PM</span>
-                                <span class="badge badge-secondary">Director</span>
-                                <span class="badge badge-secondary">VP</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.875rem; color: var(--text-secondary);">52 mentors</span>
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Career path details coming soon!')">View Full Path</button>
-                            </div>
-                        </div>
-
-                        <div class="card card-interactive">
-                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Data Science</h3>
-                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                <span class="badge badge-secondary">Analyst</span>
-                                <span class="badge badge-secondary">Data Scientist</span>
-                                <span class="badge badge-secondary">Senior DS</span>
-                                <span class="badge badge-secondary">Lead</span>
-                                <span class="badge badge-secondary">Director</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.875rem; color: var(--text-secondary);">28 mentors</span>
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Career path details coming soon!')">View Full Path</button>
-                            </div>
-                        </div>
-
-                        <div class="card card-interactive">
-                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Investment Banking
-                            </h3>
-                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                <span class="badge badge-secondary">Analyst</span>
-                                <span class="badge badge-secondary">Associate</span>
-                                <span class="badge badge-secondary">VP</span>
-                                <span class="badge badge-secondary">Director</span>
-                                <span class="badge badge-secondary">MD</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.875rem; color: var(--text-secondary);">19 mentors</span>
-                                <button class="btn btn-primary btn-sm"
-                                    onclick="alert('Career path details coming soon!')">View Full Path</button>
-                            </div>
-                        </div>
+                    <div class="company-grid" id="pathsContainer">
+                        <p style="padding: 20px; text-align: center; color: var(--text-secondary);">Loading career
+                            paths...</p>
                     </div>
                 </div>
 
-                <!-- Tab Content: Experiences -->
                 <div class="tab-content" id="experiences">
-                    <div style="max-width: 800px;">
-                        <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="avatar avatar-lg">SC</div>
-                                <div style="flex: 1;">
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                                        <div>
-                                            <h3 style="font-size: 1.125rem; font-weight: 600;">Sarah Chen</h3>
-                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">Software
-                                                Engineer
-                                                Lead at <strong>Google</strong></p>
-                                        </div>
-                                    </div>
-                                    <p
-                                        style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 1rem;">
-                                        After 5 years as an IC, I transitioned to management. Here's what I learned
-                                        about
-                                        the switch...
-                                    </p>
-                                    <div style="font-size: 0.75rem; color: var(--text-tertiary);">213 found this helpful
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm" onclick="alert('Full article coming soon!')">Read
-                                More →</button>
-                        </div>
-
-                        <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="avatar avatar-lg">MT</div>
-                                <div style="flex: 1;">
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                                        <div>
-                                            <h3 style="font-size: 1.125rem; font-weight: 600;">Michael Torres</h3>
-                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">Principal at
-                                                <strong>Stripe</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <p
-                                        style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 1rem;">
-                                        Breaking into product from consulting was challenging but possible. My path
-                                        involved...
-                                    </p>
-                                    <div style="font-size: 0.75rem; color: var(--text-tertiary);">187 found this helpful
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm" onclick="alert('Full article coming soon!')">Read
-                                More →</button>
-                        </div>
+                    <div style="max-width: 800px;" id="experiencesContainer">
+                        <p style="padding: 20px; text-align: center; color: var(--text-secondary);">Loading
+                            experiences...</p>
                     </div>
                 </div>
+                -->
 
                 <!-- Tab Content: Roadmaps -->
-                <div class="tab-content" id="roadmaps">
-                    <div class="company-grid">
-                        <div class="card card-interactive">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                                <div
-                                    style="width: 48px; height: 48px; background: rgba(76, 124, 245, 0.1); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                    🗺️</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                                        <div>
-                                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">
-                                                Breaking
-                                                into FAANG as a New Grad</h3>
-                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">by Dr. Sarah
-                                                Chen
-                                            </p>
-                                        </div>
-                                        <span class="badge badge-primary">6 days</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1rem;">12-14
-                                saves
-                            </div>
-                            <button class="btn btn-primary btn-sm" style="width: 100%;"
-                                onclick="alert('Roadmap view coming soon!')">View Roadmap</button>
-                        </div>
-
-                        <div class="card card-interactive">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                                <div
-                                    style="width: 48px; height: 48px; background: rgba(76, 124, 245, 0.1); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                    🗺️</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                                        <div>
-                                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">From
-                                                Bootcamp to Senior Engineer</h3>
-                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">by Michael
-                                                Torres
-                                            </p>
-                                        </div>
-                                        <span class="badge badge-primary">10 days</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1rem;">197
-                                saves
-                            </div>
-                            <button class="btn btn-primary btn-sm" style="width: 100%;"
-                                onclick="alert('Roadmap view coming soon!')">View Roadmap</button>
-                        </div>
-
-                        <div class="card card-interactive">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                                <div
-                                    style="width: 48px; height: 48px; background: rgba(76, 124, 245, 0.1); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                    🗺️</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                                        <div>
-                                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">
-                                                Product
-                                                Manager Interview Prep</h3>
-                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">by Emily
-                                                Watson
-                                            </p>
-                                        </div>
-                                        <span class="badge badge-primary">6 days</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1rem;">176
-                                saves
-                            </div>
-                            <button class="btn btn-primary btn-sm" style="width: 100%;"
-                                onclick="alert('Roadmap view coming soon!')">View Roadmap</button>
-                        </div>
-
-                        <div class="card card-interactive">
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                                <div
-                                    style="width: 48px; height: 48px; background: rgba(76, 124, 245, 0.1); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                    🗺️</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                                        <div>
-                                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Data
-                                                Science Career Progression</h3>
-                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">by Alex Rivera
-                                            </p>
-                                        </div>
-                                        <span class="badge badge-primary">12 days</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1rem;">654
-                                saves
-                            </div>
-                            <button class="btn btn-primary btn-sm" style="width: 100%;"
-                                onclick="alert('Roadmap view coming soon!')">View Roadmap</button>
-                        </div>
+                <div class="tab-content active" id="roadmaps">
+                    <div class="company-grid" id="roadmapsContainer">
+                        <p style="padding: 20px; text-align: center; color: var(--text-secondary);">Loading roadmaps...
+                        </p>
                     </div>
                 </div>
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
             </div>
+        </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script>
         // Tab switching
         document.querySelectorAll('.tab').forEach(tab => {
@@ -532,10 +136,105 @@
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            // Fetch Companies
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/companies', { headers: { 'Authorization': `Bearer ${token}` } });
+                const companies = await res.json();
+                const container = document.getElementById('companiesContainer');
+                container.innerHTML = '';
+
+                if (companies.length === 0) container.innerHTML = '<p>No companies found.</p>';
+
+                companies.forEach(c => {
+                    const initials = c.name.substring(0, 1).toUpperCase();
+                    const html = `
+                        <div class="company-card">
+                            <div class="company-header">
+                                <div class="company-logo">${initials}</div>
+                                <div class="company-info">
+                                    <div class="company-name">${c.name}</div>
+                                    <div class="company-rating">
+                                        <i data-lucide="star" style="width: 16px; height: 16px; stroke-width: 1.5; fill: currentColor;"></i>
+                                        <span>4.5</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="company-meta">
+                                <i data-lucide="users" style="width: 16px; height: 16px; stroke-width: 1.5;"></i>
+                                <span>${c.description}</span>
+                            </div>
+                            <div class="company-footer">
+                                <button class="btn btn-primary btn-sm" onclick="alert('Company details coming soon!')">Explore →</button>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+                lucide.createIcons();
+            } catch (e) { console.error(e); }
+
+            // Fetch Career Paths
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/career/paths', { headers: { 'Authorization': `Bearer ${token}` } });
+                const paths = await res.json();
+                const container = document.getElementById('pathsContainer');
+                container.innerHTML = '';
+
+                paths.forEach(p => {
+                    const html = `
+                        <div class="card card-interactive">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">${p.title}</h3>
+                             <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">${p.description}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.875rem; color: var(--text-secondary);">View details</span>
+                                <button class="btn btn-primary btn-sm" onclick="alert('Path details coming soon!')">View Full Path</button>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            } catch (e) { console.error(e); }
+
+            // Fetch Roadmaps
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/career/roadmaps', { headers: { 'Authorization': `Bearer ${token}` } });
+                const roadmaps = await res.json();
+                const container = document.getElementById('roadmapsContainer');
+                container.innerHTML = '';
+
+                roadmaps.forEach(r => {
+                    const html = `
+                        <div class="card card-interactive">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 48px; height: 48px; background: rgba(76, 124, 245, 0.1); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🗺️</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">${r.title}</h3>
+                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">by ${r.creator}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 1rem;">${r.saves} saves</div>
+                            <button class="btn btn-primary btn-sm" style="width: 100%;" onclick="window.location.href='roadmap-detail.html?id=${r.id}'">View Roadmap</button>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            } catch (e) { console.error(e); }
+
+            // Mock Experiences Fetch (using dashboard logic or similar, or just static for now as we didn't make endpoint)
+            const expContainer = document.getElementById('experiencesContainer');
+            expContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">Experience sharing coming soon!</p>';
+
+        });
     </script>
-    </div>
-    </div>
-    </main>
 </body>
 
 </html>

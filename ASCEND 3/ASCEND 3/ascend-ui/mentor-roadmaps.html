@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Roadmaps - ASCEND</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar-placeholder" data-src="mentor-sidebar.html"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="dashboard-nav-group">
+            <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
+        </div>
+
+        <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
+            <div class="header-user-info">
+                <div class="header-user-name">Mentor Name</div>
+                <div class="header-user-role">Mentor</div>
+            </div>
+            <div class="avatar avatar-md">ME</div>
+        </div>
+    </header>
+
+    <main class="main-layout">
+        <div class="page-container">
+            <div class="main-content">
+                <div class="page-header">
+                    <h1 class="page-title">Career Roadmaps</h1>
+                    <p class="text-secondary">Create and manage learning paths for students.</p>
+                </div>
+
+                <!-- Create New Roadmap -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-body">
+                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">Create New Roadmap</h3>
+                        <form id="createRoadmapForm">
+                            <div class="input-group">
+                                <label class="input-label">Roadmap Title</label>
+                                <input type="text" class="input" id="roadmapTitle"
+                                    placeholder="e.g. Breaking into Product Management" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Description</label>
+                                <textarea class="input" id="roadmapDesc" rows="3"
+                                    placeholder="Describe what this roadmap covers..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Roadmap</button>
+                        </form>
+                    </div>
+                </div>
+
+                <h2 class="section-title">Existing Roadmaps</h2>
+                <div id="roadmapsContainer" style="display: grid; gap: 1rem;">
+                    <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading roadmaps...</p>
+                </div>
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script>
+        lucide.createIcons();
+
+
+
+        const token = localStorage.getItem('auth_token');
+        if (!token) window.location.href = 'login.html';
+
+        async function loadRoadmaps() {
+            // Update Header User Info
+            try {
+                const profileRes = await fetch('http://127.0.0.1:5000/api/user/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (profileRes.ok) {
+                    const profileData = await profileRes.json();
+                    const nameToDisplay = profileData.full_name || 'Mentor';
+
+                    const headerName = document.querySelector('.header-user-name');
+                    if (headerName) headerName.textContent = nameToDisplay;
+
+                    const headerAvatar = document.querySelector('.header-user .avatar');
+                    if (headerAvatar) {
+                        headerAvatar.textContent = nameToDisplay.substring(0, 2).toUpperCase();
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to fetch profile for header:", e);
+            }
+
+            try {
+                // Using existing endpoint - might need filtering by creator in UI or API later if strictly 'my' roadmaps
+                // For now showing all is acceptable or filtering client side
+                const response = await fetch('http://127.0.0.1:5000/api/career/roadmaps', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                const container = document.getElementById('roadmapsContainer');
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">No roadmaps found.</p>';
+                } else {
+                    // Filter to match current user if possible? 
+                    // API returns 'creator' name, tricky to match exactly without ID. 
+                    // Let's just show all for now as "Community Roadmaps" or similar
+
+                    data.forEach(r => {
+                        const html = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${r.title}</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">${r.description}</p>
+                                    <div style="font-size: 0.85rem; color: var(--text-tertiary);">Created by ${r.creator}</div>
+                                </div>
+                            </div>
+                        `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading roadmaps:', error);
+            }
+        }
+
+        document.getElementById('createRoadmapForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('roadmapTitle').value;
+            const desc = document.getElementById('roadmapDesc').value;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/roadmaps', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ title, description: desc })
+                });
+
+                if (response.ok) {
+                    alert('Roadmap created!');
+                    document.getElementById('createRoadmapForm').reset();
+                    loadRoadmaps();
+                } else {
+                    alert('Failed to create roadmap');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        loadRoadmaps();
+    </script>
+</body>
+
+</html>

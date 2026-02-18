@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
@@ -20,26 +21,29 @@
 </head>
 
 <body>
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px;"></i>
+            </div>
             <div class="sidebar-logo-text">ASCEND</div>
         </div>
         <nav class="sidebar-nav">
             <a href="admin-dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px;"></i>
                 <span>Dashboard</span>
             </a>
             <a href="admin-users.html" class="sidebar-nav-item">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Users</span>
+                <i data-lucide="users" style="width: 20px; height: 20px;"></i>
+                <span>Manage Users</span>
             </a>
-            <a href="admin-reports.html" class="sidebar-nav-item active">
-                <i data-lucide="file-text" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Reports</span>
+            <a href="admin-content.html" class="sidebar-nav-item">
+                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+                <span>Content</span>
             </a>
             <a href="admin-settings.html" class="sidebar-nav-item">
-                <i data-lucide="settings" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <i data-lucide="settings" style="width: 20px; height: 20px;"></i>
                 <span>Settings</span>
             </a>
         </nav>
@@ -48,58 +52,57 @@
                 <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
                 <span>Collapse</span>
             </div>
-            <a href="index.html" class="sidebar-nav-item">
-                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
                 <span>Sign Out</span>
             </a>
         </div>
     </aside>
 
+    <!-- Header -->
     <header class="header">
         <div class="header-search">
             <div class="input-icon">
-                <i data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
+                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
                 <input type="text" class="input" placeholder="Search reports...">
             </div>
         </div>
+
         <div class="header-actions">
+            <button class="btn btn-secondary btn-sm">
+                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
+            </button>
             <div class="header-user">
                 <div class="header-user-info">
-                    <div class="header-user-name">Admin User</div>
-                    <div class="header-user-role">System Administrator</div>
+                    <div class="header-user-name" id="userNameDisplay">Admin</div>
+                    <div class="header-user-role">Administrator</div>
                 </div>
-                <div class="avatar avatar-md" style="background: var(--accent-red);">AD</div>
+                <div class="avatar avatar-md" id="userAvatar">AD</div>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="main-layout">
         <div class="page-container">
             <div class="main-content">
-                <div class="page-header" style="justify-content: space-between; display: flex; align-items: center;">
-                    <div class="page-header-content">
-                        <h1 class="page-title">Reports & Logs</h1>
-                        <p class="page-subtitle">Monitor flagged content and system health.</p>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Reports refreshed!')">Refresh Data</button>
+                <div class="page-header">
+                    <h1 class="page-title">Reports</h1>
+                    <p class="text-secondary">View system reports and analytics.</p>
                 </div>
 
                 <div class="card">
-                    <div class="card-body">
-                        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                            <i data-lucide="check-circle"
-                                style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                            <h3>All Clear</h3>
-                            <p>There are no pending reports or flagged content at this time.</p>
-                        </div>
-                    </div>
                 </div>
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
 
             </div>
         </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script>
         lucide.createIcons();
     </script>

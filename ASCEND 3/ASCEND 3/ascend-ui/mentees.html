@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Connected Mentors - ASCEND</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+    <style>
+        .mentors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .mentor-card-lg {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .mentor-card-lg:hover {
+            transform: translateY(-2px);
+            background: var(--card-hover);
+            border-color: var(--border-color);
+        }
+
+        .mentor-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mentor-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--text-primary);
+        }
+
+        .mentor-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .mentor-bio {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
+            </div>
+            <div class="sidebar-logo-text">ASCEND</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="ask-question.html" class="sidebar-nav-item">
+                <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Ask Questions</span>
+            </a>
+            <a href="mentees.html" class="sidebar-nav-item active">
+                <i data-lucide="user-check" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>My Mentors</span>
+            </a>
+            <a href="career-exploration.html" class="sidebar-nav-item">
+                <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>RoadMaps</span>
+            </a>
+            <a href="My-Mentor.html" class="sidebar-nav-item">
+                <i data-lucide="graduation-cap" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>All Mentors</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-nav-item" id="collapseBtn">
+                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Collapse</span>
+            </div>
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <style>
+            /* Custom Dashboard Header Styles Copied */
+            .header {
+                justify-content: flex-end;
+                position: fixed;
+            }
+
+            .dashboard-nav-group {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                position: absolute;
+                left: 45%;
+                transform: translateX(-50%);
+            }
+
+            .dashboard-nav-group .sidebar-nav-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                color: var(--text-secondary);
+                font-size: 15px;
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 6px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: transparent !important;
+                border: none !important;
+                margin: 0 !important;
+            }
+
+            .dashboard-nav-group .sidebar-nav-item:hover {
+                color: var(--text-primary);
+                transform: translateY(-2px);
+                text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .dashboard-nav-group .sidebar-nav-item.active {
+                color: var(--primary);
+                font-weight: 600;
+            }
+        </style>
+        <div class="dashboard-nav-group">
+            <a href="dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
+        </div>
+
+        <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+            <div class="header-user-info">
+                <div class="header-user-name">Loading...</div>
+                <div class="header-user-role">Student</div>
+            </div>
+            <div class="avatar avatar-md"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+        <div class="page-container">
+            <div class="main-content">
+                <div class="page-header">
+                    <div class="page-header-content">
+                        <h1 class="page-title">Connected Mentors</h1>
+                        <p class="page-subtitle">Message and collaborate with your mentors.</p>
+                    </div>
+                </div>
+
+                <div id="mentorsList" class="mentors-grid">
+                    <!-- Connected Mentors will be loaded here -->
+                    <p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Loading connected
+                        mentors...</p>
+                </div>
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Message Modal -->
+    <div class="modal-overlay" id="messageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Send Message</h3>
+                <button class="close-btn" onclick="closeMessageModal()">
+                    <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                </button>
+            </div>
+            <div class="input-group">
+                <label class="input-label" id="msgRecipientLabel">To: Mentor Name</label>
+                <textarea class="input" id="msgContent" placeholder="Type your message here..."
+                    style="min-height: 150px;"></textarea>
+            </div>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                <button class="btn btn-secondary" onclick="closeMessageModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script>
+        lucide.createIcons();
+        let currentRecipientId = null;
+
+        function openMessageModal(mentorId, mentorName) {
+            currentRecipientId = mentorId;
+            document.getElementById('msgRecipientLabel').textContent = `To: ${mentorName}`;
+            document.getElementById('msgContent').value = '';
+            document.getElementById('messageModal').classList.add('active');
+        }
+
+        function closeMessageModal() {
+            document.getElementById('messageModal').classList.remove('active');
+            currentRecipientId = null;
+        }
+
+        async function sendMessage() {
+            if (!currentRecipientId) return;
+            const content = document.getElementById('msgContent').value.trim();
+            if (!content) {
+                alert('Please enter a message.');
+                return;
+            }
+
+            const token = localStorage.getItem('auth_token');
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ recipient_id: currentRecipientId, content: content })
+                });
+
+                if (response.ok) {
+                    alert('Message sent successfully!');
+                    closeMessageModal();
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to send message');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            // Fetch User Profile for Header
+            try {
+                const profileResp = await fetch('http://127.0.0.1:5000/api/user/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (profileResp.ok) {
+                    const data = await profileResp.json();
+                    const headerName = document.querySelector('.header-user-name');
+                    if (headerName) headerName.textContent = data.profile.full_name || data.username;
+                    const headerAvatar = document.querySelector('.header-user .avatar');
+                    if (headerAvatar) headerAvatar.textContent = (data.profile.full_name || data.username).substring(0, 2).toUpperCase();
+                }
+            } catch (e) { console.error("Profile fetch error", e); }
+
+
+            // Fetch Connected Mentors
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/student/mentors', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const mentors = await response.json();
+                    const container = document.getElementById('mentorsList');
+                    container.innerHTML = '';
+
+                    if (mentors.length === 0) {
+                        container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+                            <i data-lucide="user-plus" style="width: 48px; height: 48px; color: var(--text-tertiary); margin-bottom: 1rem;"></i>
+                            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">No mentors yet</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">You haven't connected with any mentors yet.</p>
+                            <a href="My-Mentor.html" class="btn btn-primary">Find a Mentor</a>
+                         </div>`;
+                        lucide.createIcons();
+                        return;
+                    }
+
+                    mentors.forEach(m => {
+                        const html = `
+                            <div class="mentor-card-lg">
+                                <div class="mentor-header">
+                                    <div class="avatar avatar-lg">${m.initials}</div>
+                                    <div class="mentor-info">
+                                        <h3>${m.name}</h3>
+                                        <p>${m.role} at ${m.company}</p>
+                                    </div>
+                                </div>
+                                <div class="mentor-bio">
+                                    ${m.bio}
+                                </div>
+                                <button class="btn btn-primary" onclick="openMessageModal(${m.id}, '${m.name.replace(/'/g, "\\'")}')">
+                                    Message
+                                </button>
+                            </div>
+                         `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching mentors:', error);
+                document.getElementById('mentorsList').innerHTML = '<p style="color: var(--accent-red); grid-column: 1/-1; text-align: center;">Failed to load connected mentors.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

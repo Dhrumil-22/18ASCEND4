@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
@@ -20,42 +21,40 @@
 </head>
 
 <body>
-    <!-- Sidebar (Admin) -->
+    <!-- Sidebar -->
     <aside class="sidebar">
-        <!-- Logo -->
         <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px;"></i>
+            </div>
             <div class="sidebar-logo-text">ASCEND</div>
         </div>
-
-        <!-- Navigation -->
         <nav class="sidebar-nav">
             <a href="admin-dashboard.html" class="sidebar-nav-item active">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px;"></i>
                 <span>Dashboard</span>
             </a>
             <a href="admin-users.html" class="sidebar-nav-item">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Users</span>
+                <i data-lucide="users" style="width: 20px; height: 20px;"></i>
+                <span>Manage Users</span>
             </a>
-            <a href="admin-reports.html" class="sidebar-nav-item">
-                <i data-lucide="file-text" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Reports</span>
+            <a href="admin-content.html" class="sidebar-nav-item">
+                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+                <span>Content</span>
             </a>
             <a href="admin-settings.html" class="sidebar-nav-item">
-                <i data-lucide="settings" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <i data-lucide="settings" style="width: 20px; height: 20px;"></i>
                 <span>Settings</span>
             </a>
         </nav>
-
-        <!-- Footer -->
         <div class="sidebar-footer">
             <div class="sidebar-nav-item" id="collapseBtn">
                 <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
                 <span>Collapse</span>
             </div>
-            <a href="index.html" class="sidebar-nav-item">
-                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
                 <span>Sign Out</span>
             </a>
         </div>
@@ -65,8 +64,8 @@
     <header class="header">
         <div class="header-search">
             <div class="input-icon">
-                <i data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                <input type="text" class="input" placeholder="Search system...">
+                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
+                <input type="text" class="input" placeholder="Search...">
             </div>
         </div>
 
@@ -76,10 +75,10 @@
             </button>
             <div class="header-user">
                 <div class="header-user-info">
-                    <div class="header-user-name">Admin User</div>
-                    <div class="header-user-role">System Administrator</div>
+                    <div class="header-user-name" id="userNameDisplay">Admin</div>
+                    <div class="header-user-role">Administrator</div>
                 </div>
-                <div class="avatar avatar-md" style="background: var(--accent-red);">AD</div>
+                <div class="avatar avatar-md" id="userAvatar">AD</div>
             </div>
         </div>
     </header>
@@ -88,113 +87,155 @@
     <main class="main-layout">
         <div class="page-container">
             <div class="main-content">
-                <!-- Page Header -->
                 <div class="page-header">
-                    <div class="page-header-content">
-                        <h1 class="page-title">Admin Overview</h1>
-                        <p class="page-subtitle">Platform health and user management statistics.</p>
-                    </div>
+                    <h1 class="page-title">Admin Dashboard</h1>
+                    <p class="text-secondary">Platform overview and management.</p>
                 </div>
 
                 <!-- Stats Grid -->
+                <!-- ... content remains ... -->
                 <div class="stats-grid">
-                    <div class="stats-card">
-                        <div class="stats-card-icon blue">
-                            <i data-lucide="users" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="stats-card-content">
-                            <div class="stats-card-value">1,250</div>
-                            <div class="stats-card-label">Total Users</div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-value" id="statUsers">0</div>
                     </div>
-
-                    <div class="stats-card">
-                        <div class="stats-card-icon green">
-                            <i data-lucide="user-check" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="stats-card-content">
-                            <div class="stats-card-value">45</div>
-                            <div class="stats-card-label">Verified Mentors</div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Mentors</div>
+                        <div class="stat-value" id="statMentors">0</div>
                     </div>
-
-                    <div class="stats-card">
-                        <div class="stats-card-icon purple">
-                            <i data-lucide="message-square" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="stats-card-content">
-                            <div class="stats-card-value">850</div>
-                            <div class="stats-card-label">Total Discussions</div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Discussions</div>
+                        <div class="stat-value" id="statDiscussions">0</div>
                     </div>
                 </div>
 
-                <!-- Admin Action Sections -->
-                <div class="dashboard-grid">
-                    <!-- Pending Verifications -->
-                    <div class="dashboard-section" style="grid-column: span 2;">
-                        <div class="section-header">
-                            <div>
-                                <div class="section-title">
-                                    <i data-lucide="shield-alert"
-                                        style="width: 20px; height: 20px; stroke-width: 1.5; display: inline-block; vertical-align: middle; margin-right: 8px;"></i>
-                                    Pending Mentor Verifications
-                                </div>
-                            </div>
-                            <a href="admin-users.html" class="btn btn-secondary btn-sm">Manage All</a>
-                        </div>
+                <!-- Recent Registrations -->
+                <div class="section-header">
+                    <h2 class="section-title">Recent Registrations</h2>
+                    <a href="#" class="btn-link">View All</a>
+                </div>
 
-                        <!-- Verification Item 1 -->
-                        <div class="card" style="margin-bottom: 12px;">
-                            <div class="card-body"
-                                style="display: flex; align-items: center; justify-content: space-between; padding: 16px;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div class="avatar avatar-md">RK</div>
-                                    <div>
-                                        <div style="font-weight: 600;">Rahul Kumar</div>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Senior Engineer at
-                                            Amazon</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-primary btn-sm"
-                                        onclick="alert('Mentor Verified!')">Approve</button>
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="alert('Application Rejected!')">Reject</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Verification Item 2 -->
-                        <div class="card" style="margin-bottom: 12px;">
-                            <div class="card-body"
-                                style="display: flex; align-items: center; justify-content: space-between; padding: 16px;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div class="avatar avatar-md">JS</div>
-                                    <div>
-                                        <div style="font-weight: 600;">Jessica Su</div>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Product Manager at
-                                            Uber</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-primary btn-sm"
-                                        onclick="alert('Mentor Verified!')">Approve</button>
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="alert('Application Rejected!')">Reject</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card" id="usersContainer">
+                    <p style="padding: 20px; text-align: center; color: var(--text-secondary);">Loading users...</p>
                 </div>
 
             </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="card">
+                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">System Status</h3>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Database</span>
+                        <span style="color: green;">Operational</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>API</span>
+                        <span style="color: green;">Operational</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
         </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script>
+        // Initialize Lucide icons
         lucide.createIcons();
+
+
+
+        // Fetch Dashboard Data
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/admin/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update User Info
+                    document.getElementById('userNameDisplay').textContent = data.user_name;
+                    // Update header user info if we have a valid response
+                    const user = JSON.parse(localStorage.getItem('user')) || {};
+                    user.username = data.user_name;
+                    localStorage.setItem('user', JSON.stringify(user));
+
+
+                    // Update Stats
+                    document.getElementById('statUsers').textContent = data.stats.users;
+                    document.getElementById('statMentors').textContent = data.stats.mentors;
+                    document.getElementById('statDiscussions').textContent = data.stats.discussions;
+
+                    // Render Users
+                    const usersContainer = document.getElementById('usersContainer');
+                    usersContainer.innerHTML = '';
+                    if (!data.users || data.users.length === 0) {
+                        usersContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No active users found.</p>';
+                    } else {
+                        // Table header
+                        let tableHtml = `
+                            <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <th style="padding: 1rem; font-weight: 600; font-size: 0.9rem;">Username</th>
+                                        <th style="padding: 1rem; font-weight: 600; font-size: 0.9rem;">Email</th>
+                                        <th style="padding: 1rem; font-weight: 600; font-size: 0.9rem;">Role</th>
+                                        <th style="padding: 1rem; font-weight: 600; font-size: 0.9rem;">Joined</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        data.users.forEach(u => {
+                            tableHtml += `
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: 1rem; font-weight: 500;">${u.username}</td>
+                                    <td style="padding: 1rem; color: var(--text-secondary);">${u.email}</td>
+                                    <td style="padding: 1rem;"><div class="badge ${u.role === 'admin' ? 'badge-primary' : (u.role === 'student' ? 'badge-success' : 'badge-secondary')}">${u.role}</div></td>
+                                    <td style="padding: 1rem; color: var(--text-secondary);">${u.joined}</td>
+                                </tr>
+                            `;
+                        });
+
+                        tableHtml += '</tbody></table>';
+                        usersContainer.innerHTML = tableHtml;
+                    }
+                } else {
+                    console.error('Failed to load dashboard data', response.status);
+                    if (response.status === 401 || response.status === 403) {
+                        alert('Session expired or unauthorized. Please login again.');
+                        localStorage.removeItem('auth_token');
+                        localStorage.removeItem('user');
+                        window.location.href = 'login.html';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                // If it's a JSON parse error (likely because we got HTML redirect page), force logout
+                if (error.name === 'SyntaxError') {
+                    console.log('Got HTML instead of JSON, assuming session expired.');
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                }
+            }
+        });
     </script>
 </body>
 

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - ASCEND</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+
+    <style>
+        /* Shared Header Styles */
+        .header {
+            justify-content: flex-end;
+            position: fixed;
+            left: 0 !important;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .dashboard-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dashboard-nav-group .sidebar-nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important;
+            border: none !important;
+            margin: 0 !important;
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-nav-group .sidebar-nav-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Layout Override */
+        .main-layout {
+            margin-left: 0 !important;
+            width: 100%;
+            padding-top: 80px;
+            /* Offset fixed header */
+        }
+
+        /* --- About Page Unique Animations & Styles --- */
+
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .about-hero {
+            text-align: center;
+            padding: 60px 0;
+            position: relative;
+        }
+
+        .about-hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #4DA3FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+
+        .about-hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fade-in-up 0.8s ease-out 0.2s forwards;
+        }
+
+        /* Floating Background Elements */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(77, 163, 255, 0.15);
+            top: -50px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(139, 92, 246, 0.15);
+            top: 50px;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards Section (Mission/Vision) */
+        .mission-vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .mv-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 20px;
+            padding: 30px;
+            padding-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            /* Animation triggered by scroll observer in JS */
+        }
+
+        .mv-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mv-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(77, 163, 255, 0.15);
+            border-color: var(--primary);
+        }
+
+        .mv-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mv-card:hover::before {
+            opacity: 1;
+        }
+
+        .mv-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(77, 163, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .mv-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .mv-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Story Section */
+        .story-section {
+            padding: 80px 0;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        .story-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .story-content {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .story-highlight {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .value-item {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: default;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .value-item.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .value-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.05);
+        }
+
+        .value-icon {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .value-item:hover .value-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="nav-logo"
+            style="text-decoration: none; display: flex; align-items: center; gap: 10px; position: absolute; left: 32px;">
+            <i data-lucide="zap" style="width: 24px; height: 24px; color: #4DA3FF; fill: #4DA3FF;"></i>
+            <span
+                style="font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; color: white;">ASCEND</span>
+        </a>
+
+        <div class="dashboard-nav-group">
+            <a href="dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item active">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
+        </div>
+
+        <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+            <div class="header-user-info">
+                <div class="header-user-name">Loading...</div>
+                <div class="header-user-role">Student</div>
+            </div>
+            <div class="avatar avatar-md"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+        <div class="about-container">
+
+            <div class="about-hero">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <h1>Empowering the Future</h1>
+                <p>ASCEND bridges the gap between academic learning and industry reality through the power of
+                    mentorship.</p>
+            </div>
+
+            <div class="mission-vision-grid">
+                <div class="mv-card fade-on-scroll">
+                    <div class="mv-icon"><i data-lucide="target"></i></div>
+                    <h2>Our Mission</h2>
+                    <p>To democratize access to career guidance by connecting ambitious students with experienced alumni
+                        mentors, fostering a cycle of giving back and growing forward.</p>
+                </div>
+                <div class="mv-card fade-on-scroll" style="transition-delay: 0.2s;">
+                    <div class="mv-icon"><i data-lucide="lightbulb"></i></div>
+                    <h2>Our Vision</h2>
+                    <p>A world where every student has the guidance, support, and network they need to confidently step
+                        into their dream career, regardless of their background.</p>
+                </div>
+            </div>
+
+            <div class="story-section fade-on-scroll">
+                <div class="story-content">
+                    <span class="story-highlight">Built by Students, for Students</span>
+                    <p style="color: var(--text-secondary); line-height: 1.8; max-width: 800px; margin: 0 auto;">
+                        ASCEND was born from a simple realization: the transition from university to the workplace is
+                        daunting. We experienced it ourselves—the uncertainty, the lack of direction, and the difficulty
+                        in finding relatable advice. We built this platform to be the bridge we wished we had.
+                    </p>
+                </div>
+            </div>
+
+            <h2 style="text-align: center; font-family: 'Orbitron', sans-serif; margin-bottom: 30px; color: white;">Core
+                Values</h2>
+            <div class="values-grid">
+                <div class="value-item pop-on-scroll">
+                    <div class="value-icon"><i data-lucide="users" width="32" height="32"></i></div>
+                    <h3>Community</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 10px;">Building strong
+                        connections that last.</p>
+                </div>
+                <div class="value-item pop-on-scroll" style="transition-delay: 0.1s;">
+                    <div class="value-icon"><i data-lucide="trending-up" width="32" height="32"
+                            style="color: var(--primary);"></i></div>
+                    <h3>Growth</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 10px;">Continuous learning
+                        and improvement.</p>
+                </div>
+                <div class="value-item pop-on-scroll" style="transition-delay: 0.2s;">
+                    <div class="value-icon"><i data-lucide="heart" width="32" height="32"
+                            style="color: var(--accent-red);"></i></div>
+                    <h3>Empathy</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 10px;">Understanding journeys
+                        different from our own.</p>
+                </div>
+                <div class="value-item pop-on-scroll" style="transition-delay: 0.3s;">
+                    <div class="value-icon"><i data-lucide="shield" width="32" height="32"
+                            style="color: var(--accent-purple);"></i></div>
+                    <h3>Trust</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 10px;">Creating a safe space
+                        for open dialogue.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 80px; margin-bottom: 40px;">
+                <h2 style="font-family: 'Orbitron', sans-serif; margin-bottom: 20px;">Ready to Ascend?</h2>
+                <a href="register.html" class="btn btn-primary btn-lg" style="text-decoration: none;">Join the
+                    Community</a>
+            </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
+
+        </div>
+    </main>
+
+    <script src="js/include-components.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Scroll Animation Observer
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-on-scroll');
+            const popElements = document.querySelectorAll('.pop-on-scroll');
+            const storySection = document.querySelector('.story-section');
+
+            fadeElements.forEach(el => observer.observe(el));
+            popElements.forEach(el => observer.observe(el));
+            if (storySection) observer.observe(storySection);
+        });
+    </script>
+</body>
+
+</html>

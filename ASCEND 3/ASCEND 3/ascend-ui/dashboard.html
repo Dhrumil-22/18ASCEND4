@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
@@ -17,36 +18,90 @@
     <link rel="stylesheet" href="css/pages.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+    <style>
+        /* Custom Dashboard Header Styles */
+        .header {
+            justify-content: flex-end;
+            position: fixed;
+            /* Ensure context */
+        }
+
+        .dashboard-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* Decreased padding between buttons */
+            position: absolute;
+            left: 45%;
+            transform: translateX(-50%);
+        }
+
+        /* Ensure nav items inside the group behave correctly */
+        .dashboard-nav-group .sidebar-nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important;
+            /* Override global sidebar active styles */
+            border: none !important;
+            margin: 0 !important;
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            /* Hover animation */
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:active {
+            transform: scale(0.95);
+            /* Click animation */
+        }
+
+        .dashboard-nav-group .sidebar-nav-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
+            </div>
             <div class="sidebar-logo-text">ASCEND</div>
         </div>
 
         <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-nav-item active">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Dashboard</span>
-            </a>
+
             <a href="ask-question.html" class="sidebar-nav-item">
                 <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Ask Question</span>
+                <span>Ask Questions</span>
+            </a>
+            <a href="mentees.html" class="sidebar-nav-item">
+                <i data-lucide="user-check" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+
+                <span>My Mentors</span>
             </a>
             <a href="career-exploration.html" class="sidebar-nav-item">
                 <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Career Exploration</span>
+                <span>RoadMaps</span>
             </a>
-            <a href="discussion.html" class="sidebar-nav-item">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Discussion</span>
-            </a>
-            <a href="student-profile.html" class="sidebar-nav-item">
-                <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>My Profile</span>
+            <a href="My-Mentor.html" class="sidebar-nav-item">
+                <i data-lucide="graduation-cap" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>All Mentors</span>
             </a>
         </nav>
 
@@ -55,7 +110,8 @@
                 <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
                 <span>Collapse</span>
             </div>
-            <a href="index.html" class="sidebar-nav-item">
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
                 <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
                 <span>Sign Out</span>
             </a>
@@ -64,28 +120,27 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="header-search">
-            <div class="input-icon">
-                <i data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                <input type="text" class="input" placeholder="Search...">
-            </div>
+        <div class="dashboard-nav-group">
+            <a href="dashboard.html" class="sidebar-nav-item active">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
         </div>
 
-        <div class="header-actions">
-            <button class="btn btn-secondary btn-sm">
-                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-            </button>
-            <button class="btn btn-primary" onclick="window.location.href='ask-question.html'">
-                <i data-lucide="zap" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                Ask Question
-            </button>
-            <div class="header-user">
-                <div class="header-user-info">
-                    <div class="header-user-name">Alex Johnson</div>
-                    <div class="header-user-role">Student</div>
-                </div>
-                <div class="avatar avatar-md">AJ</div>
+        <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+            <div class="header-user-info">
+                <div class="header-user-name">Loading...</div>
+                <div class="header-user-role">Student</div>
             </div>
+            <div class="avatar avatar-md"></div>
         </div>
     </header>
 
@@ -96,7 +151,7 @@
                 <!-- Page Header -->
                 <div class="page-header">
                     <div class="page-header-content">
-                        <h1 class="page-title">Welcome back, Alex</h1>
+                        <h1 class="page-title">Welcome, Alex</h1>
                         <p class="page-subtitle">Continue your career journey with personalized guidance.</p>
                     </div>
                 </div>
@@ -108,7 +163,7 @@
                             <i data-lucide="message-square" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
                         </div>
                         <div class="stats-card-content">
-                            <div class="stats-card-value">12</div>
+                            <div class="stats-card-value" id="statQuestions">0</div>
                             <div class="stats-card-label">Questions Submitted</div>
                         </div>
                     </div>
@@ -118,18 +173,18 @@
                             <i data-lucide="mail" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
                         </div>
                         <div class="stats-card-content">
-                            <div class="stats-card-value">8</div>
+                            <div class="stats-card-value" id="statResponses">0</div>
                             <div class="stats-card-label">Mentor Responses</div>
                         </div>
                     </div>
 
                     <div class="stats-card">
                         <div class="stats-card-icon purple">
-                            <i data-lucide="book-open" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
+                            <i data-lucide="users" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
                         </div>
                         <div class="stats-card-content">
-                            <div class="stats-card-value">3</div>
-                            <div class="stats-card-label">Roadmaps Saved</div>
+                            <div class="stats-card-value" id="statConnections">0</div>
+                            <div class="stats-card-label">Connections</div>
                         </div>
                     </div>
                 </div>
@@ -141,11 +196,10 @@
                     </div>
                     <div class="current-goal-content">
                         <div class="current-goal-label">CURRENT GOAL</div>
-                        <div class="current-goal-text" id="dashboardGoalText">Senior Software Engineer at a FAANG
-                            Company</div>
+                        <div class="current-goal-text" id="dashboardGoalText">Loading...</div>
                     </div>
-                    <button class="btn btn-outline btn-sm"
-                        onclick="window.location.href='student-profile.html#goal'">Edit Goal</button>
+                    <button class="btn btn-outline btn-sm" onclick="window.location.href='profile.html#goal'">Edit
+                        Goal</button>
                 </div>
 
 
@@ -164,146 +218,171 @@
                             </div>
                         </div>
 
-                        <div class="mentor-card">
-                            <div class="avatar avatar-lg mentor-avatar">DSC</div>
-                            <div class="mentor-info">
-                                <div class="mentor-header">
-                                    <div>
-                                        <div class="mentor-name">Dr. Sarah Chen</div>
-                                        <div class="mentor-role">Software Engineer Lead at Google</div>
-                                        <div class="mentor-company">Google</div>
-                                    </div>
-                                    <div class="badge badge-success">98% Trust</div>
-                                </div>
-                                <div class="mentor-expertise">Tech Leadership</div>
-                            </div>
-                        </div>
-
-                        <div class="mentor-card">
-                            <div class="avatar avatar-lg mentor-avatar">MT</div>
-                            <div class="mentor-info">
-                                <div class="mentor-header">
-                                    <div>
-                                        <div class="mentor-name">Michael Torres</div>
-                                        <div class="mentor-role">Principal Engineer at Stripe</div>
-                                        <div class="mentor-company">Stripe</div>
-                                    </div>
-                                    <div class="badge badge-success">95% Trust</div>
-                                </div>
-                                <div class="mentor-expertise">PM Career Path</div>
-                            </div>
-                        </div>
-
-                        <div class="mentor-card">
-                            <div class="avatar avatar-lg mentor-avatar">EW</div>
-                            <div class="mentor-info">
-                                <div class="mentor-header">
-                                    <div>
-                                        <div class="mentor-name">Emily Watson</div>
-                                        <div class="mentor-role">Staff Scientist at Netflix</div>
-                                        <div class="mentor-company">Netflix</div>
-                                    </div>
-                                    <div class="badge badge-success">96% Trust</div>
-                                </div>
-                                <div class="mentor-expertise">Data Science • ML Careers</div>
-                            </div>
+                        <div id="mentorsContainer" style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                            <p style="color: var(--text-secondary); padding: 20px; text-align: center;">Loading
+                                mentors...</p>
                         </div>
                     </div>
 
-                    <!-- Recent Activity -->
+                    <!-- Saved Roadmaps 
                     <div>
                         <div class="section-header">
                             <div>
                                 <div class="section-title">
-                                    <i data-lucide="activity"
+                                    <i data-lucide="map"
                                         style="width: 20px; height: 20px; stroke-width: 1.5; display: inline-block; vertical-align: middle; margin-right: 8px;"></i>
-                                    Recent Activity
+                                    Saved Roadmaps
                                 </div>
-                                <div class="section-subtitle">Latest updates from your mentors</div>
+                                <div class="section-subtitle">Roadmaps you're currently following</div>
                             </div>
                         </div>
 
-                        <div class="activity-item">
-                            <div class="avatar avatar-md activity-avatar">DSC</div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Dr. Sarah Chen</strong> responded to your question about <span
-                                        class="activity-link">tech interview preparation</span>
-                                </div>
-                                <div class="activity-meta">3 hours ago</div>
-                            </div>
+                        <div id="savedRoadmapsContainer">
+                            <p style="color: var(--text-secondary); padding: 20px; text-align: center;">Loading
+                                roadmaps...</p>
                         </div>
-
-                        <div class="activity-item">
-                            <div class="avatar avatar-md activity-avatar">MT</div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Michael Torres</strong> shared a new roadmap: <span
-                                        class="activity-link">Breaking into Product Management</span>
-                                </div>
-                                <div class="activity-meta">1 day ago</div>
-                            </div>
-                        </div>
-
-                        <div class="activity-item">
-                            <div class="avatar avatar-md activity-avatar">EW</div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Emily Watson</strong> answered your question on <span
-                                        class="activity-link">data
-                                        science</span>
-                                </div>
-                                <div class="activity-meta">3 days ago</div>
-                            </div>
-                        </div>
-                    </div>
+                    </div> -->
                 </div>
 
-                <!-- Quick Actions -->
-                <div class="section-header">
-                    <div class="section-title">Quick Actions</div>
-                </div>
-
-                <div class="quick-actions">
-                    <a href="ask-question.html" class="quick-action">
-                        <div class="quick-action-icon">
-                            <i data-lucide="message-circle" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="quick-action-label">Ask a Question</div>
-                    </a>
-
-                    <a href="career-exploration.html" class="quick-action">
-                        <div class="quick-action-icon">
-                            <i data-lucide="building-2" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="quick-action-label">Explore Companies</div>
-                    </a>
-
-                    <a href="career-exploration.html?tab=roadmaps" class="quick-action">
-                        <div class="quick-action-icon">
-                            <i data-lucide="map" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="quick-action-label">View Roadmaps</div>
-                    </a>
-
-                    <a href="discussion.html" class="quick-action">
-                        <div class="quick-action-icon">
-                            <i data-lucide="message-square" style="width: 24px; height: 24px; stroke-width: 1.5;"></i>
-                        </div>
-                        <div class="quick-action-label">Join Discussion</div>
-                    </a>
-                </div>
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
             </div>
         </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
+
     <script>
         lucide.createIcons();
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedGoal = localStorage.getItem('ascend_current_goal');
-            if (savedGoal) {
-                document.getElementById('dashboardGoalText').textContent = savedGoal;
+
+        async function requestMentorship(mentorId, mentorName) {
+            const token = localStorage.getItem('auth_token');
+            const message = prompt(`Send a mentorship request to ${mentorName}? Enter a short message:`, "I'd like to learn from your experience.");
+
+            if (!message) return;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/mentorship/request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ mentor_id: mentorId, message: message })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Request sent successfully!');
+                } else {
+                    alert(data.error || 'Failed to send request');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update User Name
+                    const pageTitle = document.querySelector('.page-title');
+                    if (pageTitle) pageTitle.textContent = `Welcome, ${data.user_name}`;
+
+                    // Update Header User Profile
+                    const headerName = document.querySelector('.header-user-name');
+                    if (headerName) headerName.textContent = data.user_name;
+
+                    const headerAvatar = document.querySelector('.header-user .avatar');
+                    if (headerAvatar && data.user_name) {
+                        const parts = data.user_name.trim().split(' ');
+                        let initials = parts[0][0];
+                        if (parts.length > 1) {
+                            initials += parts[1][0];
+                        }
+                        headerAvatar.textContent = initials.toUpperCase();
+                    }
+
+                    // Update Stats
+                    document.getElementById('statQuestions').textContent = data.stats.questions;
+                    document.getElementById('statResponses').textContent = data.stats.responses;
+                    document.getElementById('statResponses').textContent = data.stats.responses;
+                    document.getElementById('statConnections').textContent = data.stats.connections;
+
+                    // Update Goal
+                    document.getElementById('dashboardGoalText').textContent = data.current_goal;
+                    localStorage.setItem('ascend_current_goal', data.current_goal); // Sync
+
+                    // Render Mentors
+                    const mentorsContainer = document.getElementById('mentorsContainer');
+                    mentorsContainer.innerHTML = '';
+                    if (data.mentors.length === 0) {
+                        mentorsContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">No mentors found.</p>';
+                    } else {
+                        data.mentors.forEach(m => {
+                            const initials = m.name.substring(0, 2).toUpperCase();
+                            // Note: we need mentor ID here, but /api/dashboard currently assumes mentor objects. 
+                            // I need to check if /api/dashboard returns IDs. 
+                            // Looking at api.py get_dashboard, it iterates 'mentors' (User objects) but constructs a dict without 'id'.
+                            // I need to update api.py to include 'id' in the mentors list.
+                            // For now, I will assume I will fix api.py next.
+                            const html = `
+                                <div class="mentor-card" style="display: flex; gap: 1rem; align-items: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                    <div class="avatar avatar-md">${initials}</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600;">${m.name}</div>
+                                        <div style="font-size: 0.85rem; color: var(--text-secondary);">${m.role} at ${m.company}</div>
+                                    </div>
+                                    <div style="display: flex; gap: 5px;">
+                                        <button class="btn btn-sm btn-outline" onclick="requestMentorship(${m.id}, '${m.name.replace(/'/g, "\\'")}')">Request</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="window.openMessageModal(${m.id}, '${m.name.replace(/'/g, "\\'")}')">Message</button>
+                                    </div>
+                                </div>
+                            `;
+                            mentorsContainer.insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+
+                    // Render Saved Roadmaps (Mock data for now)
+                    const roadmapsContainer = document.getElementById('savedRoadmapsContainer');
+                    roadmapsContainer.innerHTML = '';
+
+                    const savedRoadmaps = [
+                        { title: "Frontend Masterclass", creator: "Dr. Sarah Chen", progress: 65 },
+                        { title: "Backend Architecture", creator: "Michael Torres", progress: 30 }
+                    ];
+
+                    savedRoadmaps.forEach(r => {
+                        const html = `
+                            <div class="activity-item" onclick="window.location.href='career-exploration.html?tab=roadmaps'" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                                <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="font-weight: 600; font-size: 0.9rem;">${r.title}</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-tertiary);">by ${r.creator}</div>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="width: ${r.progress}%; height: 100%; background: var(--primary); border-radius: 10px;"></div>
+                                </div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary);">${r.progress}% Complete</div>
+                            </div>
+                        `;
+                        roadmapsContainer.insertAdjacentHTML('beforeend', html);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
             }
         });
     </script>

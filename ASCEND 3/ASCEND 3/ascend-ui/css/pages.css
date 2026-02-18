@@ -138,7 +138,7 @@
 
 .auth-card {
     width: 100%;
-    max-width: 440px;
+    max-width: 800px;
     background: rgba(26, 34, 48, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -159,15 +159,20 @@
 .auth-logo {
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+    background: transparent;
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto var(--space-4);
     font-size: 28px;
-    color: white;
-    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    color: #4DA3FF;
+}
+
+.auth-logo i,
+.auth-logo svg {
+    color: #4DA3FF !important;
+    fill: #4DA3FF !important;
 }
 
 .auth-title {
@@ -361,12 +366,12 @@
     margin-bottom: 24px;
 }
 
-/* Dashboard Grid */
+/* Dashboard Grid 
 .dashboard-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 24px;
-}
+}*/
 
 /* Dashboard Page */
 .dashboard-header {

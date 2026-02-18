@@ -9,85 +9,165 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+
+    <style>
+        /* Localized Premium Styles for Ask Question Page */
+        :root {
+            --primary-rgb: 77, 163, 255;
+        }
+
+        .page-title {
+            font-family: 'Poppins', sans-serif, var(--font-heading);
+            font-size: 2rem !important;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFF 0%, #4DA3FF 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 3rem;
+        }
+
+        .form-card {
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            margin-bottom: 2rem;
+        }
+
+        .tips-highlight {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .tips-icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(var(--primary-rgb), 0.1);
+            border-radius: 12px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .form-label-premium {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtext {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .premium-input {
+            background: transparent !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .premium-input:focus {
+            border-color: var(--primary) !important;
+            box-shadow: none;
+            background: transparent !important;
+        }
+
+        .btn-premium {
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        /* Discussion Feed Styling */
+        .discussion-feed-section {
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .discussion-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: transparent;
+        }
+
+        .discussion-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 1.75rem;
+        }
+
+        .discussion-item:last-child {
+            border-bottom: none;
+        }
+
+        .discussion-item h3 {
+            transition: color 0.3s ease;
+        }
+
+        .discussion-item:hover h3 {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem !important;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
-            <div class="sidebar-logo-text">ASCEND</div>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="ask-question.html" class="sidebar-nav-item active">
-                <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Ask Question</span>
-            </a>
-            <a href="career-exploration.html" class="sidebar-nav-item">
-                <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Career Exploration</span>
-            </a>
-            <a href="discussion.html" class="sidebar-nav-item">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Discussion</span>
-            </a>
-            <a href="student-profile.html" class="sidebar-nav-item">
-                <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>My Profile</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-nav-item" id="collapseBtn">
-                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Collapse</span>
-            </div>
-            <a href="index.html" class="sidebar-nav-item">
-                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="header-search">
-            <div class="input-icon">
-                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
-                <input type="text" class="input" placeholder="Search...">
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <button class="btn btn-secondary btn-sm">
-                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-            </button>
-            <button class="btn btn-primary" onclick="window.location.href='ask-question.html'">
-                <i data-lucide="zap" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                Ask Question
-            </button>
-            <div class="header-user">
-                <div class="header-user-info">
-                    <div class="header-user-name">Alex Johnson</div>
-                    <div class="header-user-role">Student</div>
-                </div>
-                <div class="avatar avatar-md">AJ</div>
-            </div>
-        </div>
-    </header>
+    <!-- Integrated Navigation Placeholder (Loads Sidebar and Header) -->
+    <div id="navigation-placeholder" data-src="dashboard-navigation.html"></div>
 
     <!-- Main Content -->
     <main class="main-layout">
@@ -95,112 +175,136 @@
             <div class="main-content">
                 <div class="page-header">
                     <h1 class="page-title">Submit Your Career Question</h1>
-                    <p class="text-secondary">Provide detailed information to receive meaningful guidance from
-                        experienced
-                        mentors.</p>
+                    <p class="page-subtitle">Unlock expert insights by providing context about your background and the
+                        specific challenges you're looking to overcome.</p>
                 </div>
 
-                <div style="max-width: 800px;">
-                    <!-- Tips Section -->
-                    <div class="card"
-                        style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(76, 124, 245, 0.05); border: 1px solid rgba(76, 124, 245, 0.2);">
-                        <div style="display: flex; gap: 1rem;">
-                            <div style="font-size: 24px;"><i data-lucide="search"
-                                    style="width: 18px; height: 18px; stroke-width: 1.5;"></i></div>
+                <div style="max-width: 900px;">
+                    <div class="form-card">
+                        <!-- Tips Highlight Section -->
+                        <div class="tips-highlight">
+                            <div class="tips-icon-box">
+                                <i data-lucide="lightbulb" style="width: 24px; height: 24px;"></i>
+                            </div>
                             <div>
-                                <h3 style="margin-bottom: 0.5rem; font-size: 1rem; font-weight: 600;">Tips for a Great
-                                    Question</h3>
+                                <h3
+                                    style="margin-bottom: 0.5rem; font-size: 1.125rem; font-weight: 600; color: var(--text-primary);">
+                                    How to get the best advice</h3>
                                 <ul
-                                    style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.75; padding-left: 1.25rem;">
-                                    <li>Be specific about your career goals and current situation</li>
-                                    <li>Provide context about your background and experience level</li>
-                                    <li>Ask focused questions that mentors can provide actionable advice on</li>
+                                    style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6; padding-left: 1.25rem;">
+                                    <li>Clearly state your background and long-term career goals.</li>
+                                    <li>Provide specific context so mentors can give tailored, actionable advice.</li>
+                                    <li>Focus on one specific challenge or decision at a time.</li>
                                 </ul>
                             </div>
                         </div>
+
+                        <!-- Question Form -->
+                        <form id="questionForm">
+                            <!-- Target Career Role -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <label class="form-label-premium" for="targetRole">Target Career Role</label>
+                                <span class="form-subtext">The specific position or professional path you are aiming
+                                    for.</span>
+                                <input type="text" id="targetRole" class="input premium-input"
+                                    placeholder="e.g., Senior Fullstack Developer, Product Design Lead" required>
+                            </div>
+
+                            <!-- Current Skills -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <label class="form-label-premium">Core Competencies</label>
+                                <span class="form-subtext">What technical or soft skills do you currently bring to the
+                                    table?</span>
+
+                                <div id="skillsContainer"
+                                    style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
+                                    <div class="tag tag-removable" style="padding: 6px 14px; border-radius: 8px;">
+                                        <span>JavaScript</span>
+                                        <button type="button" class="tag-remove"
+                                            onclick="this.parentElement.remove()">×</button>
+                                    </div>
+                                    <div class="tag tag-removable" style="padding: 6px 14px; border-radius: 8px;">
+                                        <span>React</span>
+                                        <button type="button" class="tag-remove"
+                                            onclick="this.parentElement.remove()">×</button>
+                                    </div>
+                                    <div class="tag tag-removable" style="padding: 6px 14px; border-radius: 8px;">
+                                        <span>Node.js</span>
+                                        <button type="button" class="tag-remove"
+                                            onclick="this.parentElement.remove()">×</button>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.75rem;">
+                                    <input type="text" id="skillInput" class="input premium-input"
+                                        placeholder="Add a skill and press Enter..." style="flex: 1;">
+                                    <button type="button" class="btn btn-secondary"
+                                        style="height: 44px; white-space: nowrap;" onclick="addSkill()">+ Add
+                                        Skill</button>
+                                </div>
+                            </div>
+
+                            <!-- Your Question -->
+                            <div style="margin-bottom: 2.5rem;">
+                                <label class="form-label-premium" for="question">Detailed Question</label>
+                                <span class="form-subtext">Explain your situation and what specific guidance you
+                                    need.</span>
+                                <textarea id="question" class="input premium-input"
+                                    placeholder="What specific guidance are you seeking?"
+                                    style="min-height: 180px; padding: 1rem;" required></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div
+                                style="display: flex; gap: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                                <button type="submit" class="btn btn-primary btn-premium">Post Question to
+                                    Mentors</button>
+                                <button type="button" class="btn btn-secondary btn-premium"
+                                    onclick="window.location.href='dashboard.html'">Discard</button>
+                            </div>
+                        </form>
                     </div>
-
-                    <!-- Question Form -->
-                    <form id="questionForm">
-                        <!-- Current Skills -->
-                        <div class="input-group" style="margin-bottom: 2rem;">
-                            <label class="input-label">Current Skills</label>
-                            <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 0.75rem;">Add the
-                                technical
-                                and soft skills you currently possess.</p>
-
-                            <div id="skillsContainer"
-                                style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                <div class="tag tag-removable">
-                                    <span>JavaScript</span>
-                                    <button type="button" class="tag-remove"
-                                        onclick="this.parentElement.remove()">×</button>
-                                </div>
-                                <div class="tag tag-removable">
-                                    <span>React</span>
-                                    <button type="button" class="tag-remove"
-                                        onclick="this.parentElement.remove()">×</button>
-                                </div>
-                                <div class="tag tag-removable">
-                                    <span>Node.js</span>
-                                    <button type="button" class="tag-remove"
-                                        onclick="this.parentElement.remove()">×</button>
-                                </div>
-                            </div>
-
-                            <div style="display: flex; gap: 0.5rem;">
-                                <input type="text" id="skillInput" class="input"
-                                    placeholder="Add a skill (e.g., Python, Leadership)" style="flex: 1;">
-                                <button type="button" class="btn btn-secondary" onclick="addSkill()">+ Add</button>
-                            </div>
-                        </div>
-
-                        <!-- Target Career Role -->
-                        <div class="input-group" style="margin-bottom: 2rem;">
-                            <label class="input-label" for="targetRole">Target Career Role</label>
-                            <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 0.75rem;">What role are
-                                you
-                                aiming for in your career?</p>
-                            <input type="text" id="targetRole" class="input"
-                                placeholder="e.g., Senior Software Engineer, Product Manager" required>
-                        </div>
-
-                        <!-- Your Question -->
-                        <div class="input-group" style="margin-bottom: 2rem;">
-                            <label class="input-label" for="question">Your Question</label>
-                            <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 0.75rem;">Describe your
-                                question in detail.</p>
-                            <textarea id="question" class="input" placeholder="What specific guidance are you seeking?"
-                                rows="8" required></textarea>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div style="display: flex; gap: 1rem;">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit Question →</button>
-                            <button type="button" class="btn btn-secondary btn-lg"
-                                onclick="window.location.href='dashboard.html'">Cancel</button>
-                        </div>
-                    </form>
 
                     <!-- Success Message (hidden by default) -->
                     <div id="successMessage"
-                        style="display: none; margin-top: 2rem; padding: 1.5rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 0.75rem;">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="font-size: 32px;">✅</div>
-                            <div>
-                                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem;">Question
-                                    Submitted!</h3>
-                                <p style="font-size: 0.875rem; color: var(--text-secondary);">Your question has been
-                                    submitted to mentors for review.</p>
+                        style="display: none; padding: 2rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 1.5rem; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+                        <h3 style="font-size: 1.5rem; font-weight: 700; color: #3DDC97; margin-bottom: 0.5rem;">Question
+                            Submitted Successfully!</h3>
+                        <p style="font-size: 1rem; color: var(--text-secondary); max-width: 400px; margin: 0 auto;">Our
+                            community of mentors has been notified. We'll let you know once you have a response.</p>
+                    </div>
+
+                    <!-- Recent Discussions Section -->
+                    <div class="discussion-feed-section">
+                        <div
+                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+                            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">Recent
+                                Mentorship Discussions</h2>
+                            <a href="all-questions.html"
+                                style="font-size: 0.875rem; color: var(--primary); text-decoration: none; font-weight: 600;">View
+                                All →</a>
+                        </div>
+
+                        <div class="card"
+                            style="padding: 0; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div id="discussionsContainer">
+                                <p
+                                    style="padding: 3rem; text-align: center; color: var(--text-secondary); font-size: 0.9375rem;">
+                                    Loading recent conversations...</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
         </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script>
         function addSkill() {
             const input = document.getElementById('skillInput');
@@ -228,24 +332,129 @@
         });
 
         // Form submission
-        document.getElementById('questionForm').addEventListener('submit', function (e) {
+        document.getElementById('questionForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            // Show success message
-            document.getElementById('successMessage').style.display = 'block';
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                alert('Please login to ask a question.');
+                window.location.href = 'login.html';
+                return;
+            }
 
-            // Scroll to success message
-            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+            // Collect data
+            const role = document.getElementById('targetRole').value;
+            const questionText = document.getElementById('question').value;
 
-            // Redirect to dashboard after 2 seconds
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 2000);
+            // Collect skills
+            const skills = [];
+            document.querySelectorAll('#skillsContainer .tag span').forEach(span => {
+                skills.push(span.textContent);
+            });
+
+            // Construct payload
+            const title = `Question about ${role}`;
+            const content = `${questionText}\n\nTarget Role: ${role}\nCurrent Skills: ${skills.join(', ')}`;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ title, content })
+                });
+
+                if (response.ok) {
+                    // Show success message
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+
+                    // Clear form
+                    e.target.reset();
+                    document.getElementById('skillsContainer').innerHTML = ''; // Clear skills
+
+                    // Redirect to dashboard after 2 seconds based on role
+                    setTimeout(() => {
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        const role = user ? user.role : 'student';
+                        if (role === 'admin') {
+                            window.location.href = 'admin-dashboard.html';
+                        } else if (role === 'mentor' || role === 'alumni') {
+                            window.location.href = 'mentor-dashboard.html';
+                        } else {
+                            window.location.href = 'dashboard.html';
+                        }
+                    }, 2000);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.error || 'Failed to submit question'}`);
+                }
+            } catch (error) {
+                console.error('Error submitting question:', error);
+                alert('An error occurred. Please try again.');
+            }
         });
-    </script>
-    <script>
         // Initialize Lucide icons
         lucide.createIcons();
+
+        // Fetch Recent Discussions
+        async function fetchRecentDiscussions() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/questions', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const questions = await response.json();
+                const container = document.getElementById('discussionsContainer');
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (questions.length === 0) {
+                    container.innerHTML = '<p style="padding: 3rem; text-align: center; color: var(--text-secondary);">No discussions yet.</p>';
+                    return;
+                }
+
+                // Show only top 5 recent ones
+                questions.slice(0, 5).forEach(q => {
+                    const date = new Date(q.created_at).toLocaleDateString();
+                    const html = `
+                        <div class="discussion-item" onclick="window.location.href='question-detail.html?id=${q.id}'">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">${q.title}</h3>
+                                <span style="font-size: 0.8125rem; color: var(--text-tertiary);">${date}</span>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.5; margin-bottom: 1.25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${q.content}</p>
+                            <div style="display: flex; align-items: center; gap: 1.25rem; font-size: 0.8125rem; color: var(--text-tertiary);">
+                                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                    <i data-lucide="message-square" style="width: 15px; height: 15px; color: var(--primary);"></i>
+                                    <span>${q.answers_count || 0} answers</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                    <i data-lucide="user" style="width: 15px; height: 15px;"></i>
+                                    <span>${q.author || 'Anonymous'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error('Error fetching discussions:', error);
+                const container = document.getElementById('discussionsContainer');
+                if (container) {
+                    container.innerHTML = '<p style="padding: 3rem; text-align: center; color: var(--error-color);">Failed to load discussions.</p>';
+                }
+            }
+        }
+
+        // Call on load
+        document.addEventListener('DOMContentLoaded', fetchRecentDiscussions);
     </script>
 </body>
 

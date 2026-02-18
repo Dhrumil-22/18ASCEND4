@@ -1,6 +1,37 @@
 // Navigation JavaScript
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Role-based Navigation Logic
+    const user = JSON.parse(localStorage.getItem('user'));
+    const role = user ? user.role : 'student';
+
+    // Update Dashboard Link
+    const dashboardLink = document.querySelector('a[href="dashboard.html"]');
+    if (dashboardLink) {
+        if (role === 'admin') {
+            dashboardLink.setAttribute('href', 'admin-dashboard.html');
+        } else if (role === 'mentor' || role === 'alumni') {
+            dashboardLink.setAttribute('href', 'mentor-dashboard.html');
+        }
+    }
+
+    // Role-based Logo Redirection
+    const navLogo = document.querySelector('.nav-logo');
+    if (navLogo) {
+        if (role === 'admin') {
+            navLogo.setAttribute('href', 'admin-dashboard.html');
+        } else if (role === 'mentor' || role === 'alumni') {
+            navLogo.setAttribute('href', 'mentor-dashboard.html');
+        } else if (role === 'student') {
+            navLogo.setAttribute('href', 'dashboard.html');
+        } else {
+            navLogo.setAttribute('href', 'index.html');
+        }
+    }
+
+    // Update Profile Link (if needed, though student-profile.html is shared but might need role-specific view later)
+    // For now, student-profile.html handles display based on data, so link is fine.
+
     // Highlight active navigation item
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navItems = document.querySelectorAll('.sidebar-nav-item');
@@ -36,8 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             svg.style.display = 'inline-flex';
                             svg.style.opacity = '1';
                             svg.style.visibility = 'visible';
-                            svg.style.stroke = '#8A97AA';
-                            svg.style.fill = 'none';
                         });
                     }
                 }
@@ -88,12 +117,19 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const href = this.getAttribute('href');
+            if (href === '#' || !href.startsWith('#')) return;
+
+            try {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            } catch (err) {
+                console.error('Scroll error:', err);
             }
         });
     });

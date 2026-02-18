@@ -5,166 +5,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentorship Requests - ASCEND</title>
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
 </head>
 
 <body>
-    <!-- Sidebar (Alumni) -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
-            <div class="sidebar-logo-text">ASCEND</div>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="alumni-dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="mentorship-requests.html" class="sidebar-nav-item active">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Mentorship</span>
-            </a>
-            <a href="alumni-profile.html" class="sidebar-nav-item">
-                <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>My Profile</span>
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <div class="sidebar-nav-item" id="collapseBtn">
-                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Collapse</span>
-            </div>
-            <a href="index.html" class="sidebar-nav-item">
-                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
-    </aside>
+    <!-- Sidebar -->
+    <div id="sidebar-placeholder" data-src="mentor-sidebar.html"></div>
 
     <!-- Header -->
     <header class="header">
-        <div class="header-search">
-            <div class="input-icon">
-                <i data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                <input type="text" class="input" placeholder="Search requests...">
-            </div>
+        <div class="dashboard-nav-group">
+            <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
         </div>
-        <div class="header-actions">
-            <button class="btn btn-secondary btn-sm">
-                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-            </button>
-            <div class="header-user">
-                <div class="header-user-info">
-                    <div class="header-user-name">Dr. Sarah Chen</div>
-                    <div class="header-user-role">Alumni Mentor</div>
-                </div>
-                <div class="avatar avatar-md">SC</div>
+
+        <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
+            <div class="header-user-info">
+                <div class="header-user-name">Mentor Name</div>
+                <div class="header-user-role">Mentor</div>
             </div>
+            <div class="avatar avatar-md">ME</div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="main-layout">
         <div class="page-container">
             <div class="main-content">
                 <div class="page-header">
-                    <div class="page-header-content">
-                        <h1 class="page-title">Mentorship Requests</h1>
-                        <p class="page-subtitle">Manage incoming student queries and longterm mentorships.</p>
-                    </div>
+                    <h1 class="page-title">Mentorship Requests</h1>
+                    <p class="text-secondary">Review and accept new students.</p>
                 </div>
 
-                <!-- Tabs -->
-                <div class="tabs">
-                    <div class="tab active">Pending Requests</div>
-                    <div class="tab">Active Mentees</div>
-                    <div class="tab">History</div>
+                <div class="card" id="requestsContainer">
+                    <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading requests...</p>
                 </div>
-
-                <!-- Request Card -->
-                <div class="card" style="margin-bottom: 16px;">
-                    <div class="card-body">
-                        <div style="display: flex; gap: 16px; align-items: flex-start;">
-                            <div class="avatar avatar-lg">JD</div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <div>
-                                        <h3 style="font-weight: 600; font-size: 16px;">John Doe</h3>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Computer Science •
-                                            Class of 2025</div>
-                                    </div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">2 hours ago</div>
-                                </div>
-                                <p
-                                    style="font-size: 14px; color: var(--text-primary); line-height: 1.5; margin-bottom: 16px;">
-                                    Hi Dr. Chen, I'm a final year student interested in distributed systems. I saw your
-                                    work at Google and would love
-                                    to ask a few questions about preparing for backend interviews.
-                                </p>
-                                <div style="display: flex; gap: 12px;">
-                                    <button class="btn btn-primary btn-sm" onclick="alert('Request Accepted!')">Accept
-                                        Request</button>
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="alert('Request Declined!')">Decline</button>
-                                    <button class="btn btn-ghost btn-sm"
-                                        onclick="window.location.href='profile-view.html'">View Profile</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Request Card 2 -->
-                <div class="card" style="margin-bottom: 16px;">
-                    <div class="card-body">
-                        <div style="display: flex; gap: 16px; align-items: flex-start;">
-                            <div class="avatar avatar-lg">AS</div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <div>
-                                        <h3 style="font-weight: 600; font-size: 16px;">Alice Smith</h3>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Information Tech •
-                                            Class of 2024</div>
-                                    </div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Yesterday</div>
-                                </div>
-                                <p
-                                    style="font-size: 14px; color: var(--text-primary); line-height: 1.5; margin-bottom: 16px;">
-                                    Hello! I am looking for a resume review. I have a background in Python but want to
-                                    pivot to Data Science.
-                                    Could you please take a look?
-                                </p>
-                                <div style="display: flex; gap: 12px;">
-                                    <button class="btn btn-primary btn-sm" onclick="alert('Request Accepted!')">Accept
-                                        Request</button>
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="alert('Request Declined!')">Decline</button>
-                                    <button class="btn btn-ghost btn-sm"
-                                        onclick="window.location.href='profile-view.html'">View Profile</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
             </div>
         </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script>
         lucide.createIcons();
+        async function handleRequest(reqId, action) {
+            const token = localStorage.getItem('auth_token');
+            if (!confirm(`Are you sure you want to ${action} this request?`)) return;
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/api/mentorship/request/${reqId}/respond`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ action: action })
+                });
+
+                if (response.ok) {
+                    alert(`Request ${action}ed successfully!`);
+                    window.location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to process request');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/mentor/requests', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const container = document.getElementById('requestsContainer');
+                    container.innerHTML = '';
+
+                    if (data.length === 0) {
+                        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">No pending requests.</p>';
+                    } else {
+                        data.forEach(r => {
+                            const html = `
+                                <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start;">
+                                    <div class="avatar avatar-md">${r.initials}</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 0.25rem;">${r.name}</div>
+                                        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Requested on ${r.date}</div>
+                                        <p style="color: var(--text-primary); margin-bottom: 1rem;">${r.message}</p>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <button class="btn btn-primary btn-sm" onclick="handleRequest(${r.id}, 'accept')">Accept</button>
+                                            <button class="btn btn-secondary btn-sm" onclick="handleRequest(${r.id}, 'reject')">Decline</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            container.insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+                } else {
+                    console.error("Failed to fetch requests");
+                    // standard auth check...
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
     </script>
 </body>
 

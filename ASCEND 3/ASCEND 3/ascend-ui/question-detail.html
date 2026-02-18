@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Detail - ASCEND</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px;"></i>
+            </div>
+            <div class="sidebar-logo-text">ASCEND</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="ask-question.html" class="sidebar-nav-item ">
+                <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Ask Question</span>
+            </a>
+            <a href="career-exploration.html" class="sidebar-nav-item">
+                <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Career Exploration</span>
+            </a>
+            <a href="discussion.html" class="sidebar-nav-item active">
+                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Discussion</span>
+            </a>
+            <a href="profile.html" class="sidebar-nav-item">
+                <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>My Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-nav-item" id="collapseBtn">
+                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Collapse</span>
+            </div>
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-search">
+            <div class="input-icon">
+                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
+                <input type="text" class="input" placeholder="Search...">
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn btn-secondary btn-sm">
+                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='ask-question.html'">
+                <i data-lucide="zap" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
+                Ask Question
+            </button>
+            <div class="header-user">
+                <div class="header-user-info">
+                    <div class="header-user-name">Alex Johnson</div>
+                    <div class="header-user-role">Student</div>
+                </div>
+                <div class="avatar avatar-md">AJ</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-layout">
+        <div class="page-container">
+            <div class="main-content">
+                <div class="page-header">
+                    <a href="My-Mentor.html"
+                        style="color: var(--text-secondary); display: flex; align-items: center; margin-bottom: 1rem;">
+                        <i data-lucide="arrow-left" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Back
+                        to My Mentor
+                    </a>
+                    <h1 class="page-title" id="questionTitle">Loading...</h1>
+                </div>
+
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="avatar avatar-md" id="authorAvatar">?</div>
+                        <div>
+                            <div style="font-weight: 600;" id="authorName">Unknown</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;" id="questionDate">...</div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-primary); line-height: 1.6;" id="questionContent">...</p>
+                </div>
+
+                <h3 style="margin-bottom: 1rem;">Answers</h3>
+                <div id="answersContainer">
+                    <!-- Answers will be loaded here -->
+                </div>
+
+                <div class="card" id="replyFormCard" style="margin-top: 2rem; display: none;">
+                    <h3 style="margin-bottom: 1rem;">Post an Answer</h3>
+                    <form id="replyForm">
+                        <div class="input-group">
+                            <textarea id="replyContent" class="input" style="height: 100px; resize: vertical;"
+                                placeholder="Write your helpful answer here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post Answer</button>
+                    </form>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            const role = user ? user.role : 'student';
+
+            // Show reply form only for verified mentors/admins
+            if (token && (role === 'mentor' || role === 'alumni' || role === 'admin')) {
+                // Ideally check verification status here too, but backend enforces it.
+                // We'll show the form and let backend reject if unverified, or check logic here.
+                document.getElementById('replyFormCard').style.display = 'block';
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const questionId = urlParams.get('id');
+
+            if (!questionId) {
+                console.error('No question ID found in URL:', window.location.search);
+                document.querySelector('.main-content').innerHTML = `
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <span style="font-size: 3rem;">⚠️</span>
+                        <h2 style="margin: 1rem 0;">Question Not Found</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">The link you followed seems to be invalid (missing ID).</p>
+                        <a href="discussion.html" class="btn btn-primary">Back to Discussions</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Fetch Question Details
+            try {
+                // Reuse get_questions but filter on client side? Or create specific endpoint?
+                // existing 'get_questions' returns all. Let's use it for now and filter.
+                // Efficient? No. Quick? Yes. 
+                // Better: Create /api/questions/<id> but I didn't yet.
+                // Let's rely on get_questions returning all and finding it.
+                const response = await fetch('http://127.0.0.1:5000/api/questions', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const questions = await response.json();
+                const question = questions.find(q => q.id == questionId);
+
+                if (question) {
+                    document.getElementById('questionTitle').textContent = question.title;
+                    document.getElementById('questionContent').textContent = question.content;
+                    document.getElementById('authorName').textContent = question.author_name;
+                    document.getElementById('authorAvatar').textContent = question.author_initials;
+                    document.getElementById('questionDate').textContent = question.created_at;
+
+                    const answersContainer = document.getElementById('answersContainer');
+                    if (question.replies && question.replies.length > 0) {
+                        question.replies.forEach(r => {
+                            const html = `
+                                <div class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary);">
+                                    <div style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
+                                        <div class="avatar avatar-sm">${r.author_name.substring(0, 2).toUpperCase()}</div>
+                                        <div>
+                                            <div style="font-weight: 600;">${r.author_name} 
+                                                <span class="badge badge-primary" style="font-size: 0.7rem; margin-left: 0.5rem;">${r.author_role}</span>
+                                            </div>
+                                            <div style="color: var(--text-secondary); font-size: 0.85rem;">${r.created_at}</div>
+                                        </div>
+                                    </div>
+                                    <p>${r.content}</p>
+                                </div>
+                            `;
+                            answersContainer.insertAdjacentHTML('beforeend', html);
+                        });
+                    } else {
+                        answersContainer.innerHTML = '<p class="text-secondary">No answers yet. Be the first!</p>';
+                    }
+                } else {
+                    alert('Question not found');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
+            // Handle Reply Submission
+            const replyForm = document.getElementById('replyForm');
+            if (replyForm) {
+                replyForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const content = document.getElementById('replyContent').value;
+
+                    try {
+                        const res = await fetch(`http://127.0.0.1:5000/api/questions/${questionId}/reply`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ content })
+                        });
+
+                        if (res.ok) {
+                            alert('Answer posted!');
+                            window.location.reload();
+                        } else {
+                            const err = await res.json();
+                            alert(err.error || 'Failed to post answer');
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        alert('Error posting answer');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

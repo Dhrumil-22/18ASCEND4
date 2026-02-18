@@ -1,0 +1,49 @@
+/* Custom Dashboard Header Styles extract from dashboard.html */
+.header {
+    justify-content: flex-end;
+}
+
+.dashboard-nav-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* Decreased padding between buttons */
+    position: absolute;
+    left: 45%;
+    transform: translateX(-50%);
+}
+
+/* Ensure nav items inside the group behave correctly */
+.dashboard-nav-group .sidebar-nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent !important;
+    /* Override global sidebar active styles */
+    border: none !important;
+    margin: 0 !important;
+}
+
+.dashboard-nav-group .sidebar-nav-item:hover {
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    /* Hover animation */
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-nav-group .sidebar-nav-item:active {
+    transform: scale(0.95);
+    /* Click animation */
+}
+
+.dashboard-nav-group .sidebar-nav-item.active {
+    color: var(--primary);
+    font-weight: 600;
+}

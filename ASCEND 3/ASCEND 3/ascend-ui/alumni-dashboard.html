@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
@@ -24,7 +26,9 @@
     <aside class="sidebar">
         <!-- Logo -->
         <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px;"></i>
+            </div>
             <div class="sidebar-logo-text">ASCEND</div>
         </div>
 
@@ -50,7 +54,8 @@
                 <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
                 <span>Collapse</span>
             </div>
-            <a href="index.html" class="sidebar-nav-item">
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
                 <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
                 <span>Sign Out</span>
             </a>
@@ -183,12 +188,14 @@
                         </div>
                     </div>
                 </div>
-
+                <!-- Footer -->
+                <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
             </div>
         </div>
     </main>
 
     <script src="js/navigation.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script>
         lucide.createIcons();
     </script>
