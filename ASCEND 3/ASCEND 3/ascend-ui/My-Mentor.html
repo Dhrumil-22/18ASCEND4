@@ -246,6 +246,7 @@
                 const data = await response.json();
                 if (response.ok) {
                     alert('Request sent successfully!');
+                    window.location.reload();
                 } else {
                     alert(data.error || 'Failed to send request');
                 }

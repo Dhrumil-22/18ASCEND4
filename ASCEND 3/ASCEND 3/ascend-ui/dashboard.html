@@ -144,7 +144,7 @@
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
             <button onclick="window.location.href='student-messages.html'"
-                style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
                 <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
             </button>
 
@@ -265,6 +265,15 @@
         </div>
     </main>
 
+    <div id="systemStatus"
+        style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.9); border: 1px solid #333; color: #0f0; padding: 15px; font-family: monospace; font-size: 12px; z-index: 9999; width: 300px; border-radius: 8px;">
+        <h3 style="margin: 0 0 10px 0; color: #fff; border-bottom: 1px solid #333; padding-bottom: 5px;">System
+            Diagnostics</h3>
+        <div id="statusLog">Initializing Dashboard...</div>
+        <button onclick="this.parentElement.style.display='none'"
+            style="position: absolute; top: 5px; right: 5px; background: none; border: none; color: #fff; cursor: pointer;">x</button>
+    </div>
+
     <script src="js/navigation.js"></script>
     <script src="js/auth-guard.js"></script>
 
@@ -299,16 +308,36 @@
             }
         }
 
+        function logStatus(msg, type = 'info') {
+            const log = document.getElementById('statusLog');
+            if (log) {
+                const color = type === 'error' ? 'red' : (type === 'success' ? '#0f0' : '#ccc');
+                log.innerHTML += `<div style="color: ${color}; margin-top: 4px;">> ${msg}</div>`;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('auth_token');
-            if (!token) return;
+            const user = localStorage.getItem('user');
+
+            logStatus("Checking LocalStorage...");
+            logStatus("Token: " + (token ? "PRESENT" : "MISSING"), token ? 'success' : 'error');
+            logStatus("User: " + (user ? "PRESENT" : "MISSING"), user ? 'success' : 'error');
+
+            if (!token) {
+                logStatus("No token found, redirecting to login", 'error');
+                return;
+            }
 
             try {
+                logStatus("Fetching Dashboard Data...");
                 const response = await fetch('http://127.0.0.1:5000/api/dashboard', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
+
+                logStatus("API Status: " + response.status, response.ok ? 'success' : 'error');
 
                 if (response.ok) {
                     const data = await response.json();
@@ -336,72 +365,78 @@
                     }
 
                     // Update Stats
-                    document.getElementById('statQuestions').textContent = data.stats.questions;
-                    document.getElementById('statResponses').textContent = data.stats.responses;
-                    document.getElementById('statResponses').textContent = data.stats.responses;
-                    document.getElementById('statConnections').textContent = data.stats.connections;
+                    const statQuestions = document.getElementById('statQuestions');
+                    if (statQuestions) statQuestions.textContent = data.stats.questions;
+
+                    const statResponses = document.getElementById('statResponses');
+                    if (statResponses) statResponses.textContent = data.stats.responses;
+
+                    const statConnections = document.getElementById('statConnections');
+                    if (statConnections) statConnections.textContent = data.stats.connections;
 
                     // Update Goal
-                    document.getElementById('dashboardGoalText').textContent = data.current_goal;
+                    const goalText = document.getElementById('dashboardGoalText');
+                    if (goalText) goalText.textContent = data.current_goal;
+
                     localStorage.setItem('ascend_current_goal', data.current_goal); // Sync
 
                     // Render Mentors
                     const mentorsContainer = document.getElementById('mentorsContainer');
-                    mentorsContainer.innerHTML = '';
-                    if (data.mentors.length === 0) {
-                        mentorsContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">No mentors found.</p>';
-                    } else {
-                        data.mentors.forEach(m => {
-                            const initials = m.name.substring(0, 2).toUpperCase();
-                            // Note: we need mentor ID here, but /api/dashboard currently assumes mentor objects. 
-                            // I need to check if /api/dashboard returns IDs. 
-                            // Looking at api.py get_dashboard, it iterates 'mentors' (User objects) but constructs a dict without 'id'.
-                            // I need to update api.py to include 'id' in the mentors list.
-                            // For now, I will assume I will fix api.py next.
-                            const html = `
-                                <div class="mentor-card" style="display: flex; gap: 1rem; align-items: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                    <div class="avatar avatar-md">${initials}</div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 600;">${m.name}</div>
-                                        <div style="font-size: 0.85rem; color: var(--text-secondary);">${m.role} at ${m.company}</div>
+                    if (mentorsContainer) {
+                        mentorsContainer.innerHTML = '';
+                        if (data.mentors.length === 0) {
+                            mentorsContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">No mentors found.</p>';
+                        } else {
+                            data.mentors.forEach(m => {
+                                const initials = (m.name || "??").substring(0, 2).toUpperCase();
+                                const html = `
+                                    <div class="mentor-card" style="display: flex; gap: 1rem; align-items: center; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                        <div class="avatar avatar-md">${initials}</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600;">${m.name}</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-secondary);">${m.role} at ${m.company}</div>
+                                        </div>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn btn-sm btn-outline" onclick="requestMentorship(${m.id}, '${m.name.replace(/'/g, "\\'")}')">Request</button>
+                                            <button class="btn btn-sm btn-secondary" onclick="window.location.href='student-messages.html?partner_id=${m.id}'">Message</button>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; gap: 5px;">
-                                        <button class="btn btn-sm btn-outline" onclick="requestMentorship(${m.id}, '${m.name.replace(/'/g, "\\'")}')">Request</button>
-                                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='student-messages.html?partner_id=${m.id}'">Message</button>
-                                    </div>
-                                </div>
-                            `;
-                            mentorsContainer.insertAdjacentHTML('beforeend', html);
-                        });
+                                `;
+                                mentorsContainer.insertAdjacentHTML('beforeend', html);
+                            });
+                        }
                     }
 
                     // Render Saved Roadmaps (Mock data for now)
                     const roadmapsContainer = document.getElementById('savedRoadmapsContainer');
-                    roadmapsContainer.innerHTML = '';
+                    if (roadmapsContainer) {
+                        roadmapsContainer.innerHTML = '';
 
-                    const savedRoadmaps = [
-                        { title: "Frontend Masterclass", creator: "Dr. Sarah Chen", progress: 65 },
-                        { title: "Backend Architecture", creator: "Michael Torres", progress: 30 }
-                    ];
+                        const savedRoadmaps = [
+                            { title: "Frontend Masterclass", creator: "Dr. Sarah Chen", progress: 65 },
+                            { title: "Backend Architecture", creator: "Michael Torres", progress: 30 }
+                        ];
 
-                    savedRoadmaps.forEach(r => {
-                        const html = `
-                            <div class="activity-item" onclick="window.location.href='career-exploration.html?tab=roadmaps'" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-                                <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                                    <div style="font-weight: 600; font-size: 0.9rem;">${r.title}</div>
-                                    <div style="font-size: 0.75rem; color: var(--text-tertiary);">by ${r.creator}</div>
+                        savedRoadmaps.forEach(r => {
+                            const html = `
+                                <div class="activity-item" onclick="window.location.href='career-exploration.html?tab=roadmaps'" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="font-weight: 600; font-size: 0.9rem;">${r.title}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-tertiary);">by ${r.creator}</div>
+                                    </div>
+                                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                                        <div style="width: ${r.progress}%; height: 100%; background: var(--primary); border-radius: 10px;"></div>
+                                    </div>
+                                    <div style="font-size: 0.7rem; color: var(--text-secondary);">${r.progress}% Complete</div>
                                 </div>
-                                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                                    <div style="width: ${r.progress}%; height: 100%; background: var(--primary); border-radius: 10px;"></div>
-                                </div>
-                                <div style="font-size: 0.7rem; color: var(--text-secondary);">${r.progress}% Complete</div>
-                            </div>
-                        `;
-                        roadmapsContainer.insertAdjacentHTML('beforeend', html);
-                    });
+                            `;
+                            roadmapsContainer.insertAdjacentHTML('beforeend', html);
+                        });
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
+                logStatus("Fetch Exception: " + error.message, 'error');
             }
         });
     </script>

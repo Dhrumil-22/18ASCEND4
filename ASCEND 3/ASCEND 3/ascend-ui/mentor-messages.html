@@ -23,40 +23,51 @@
     <style>
         .chat-container {
             display: flex;
-            height: calc(100vh - 140px);
-            /* Adjust based on header/footer */
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
+            height: calc(100vh - 80px);
+            /* Full height minus header */
+            background: var(--bg-main);
+            /* border-top: 1px solid var(--border-color); Removed border for seamless look */
             overflow: hidden;
         }
 
         /* Sidebar - Chat List */
         .chat-sidebar {
-            width: 320px;
+            width: 350px;
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(11, 15, 25, 0.4);
+            /* Glass-like transparency */
+            backdrop-filter: blur(10px);
         }
 
         .chat-header {
-            padding: 1rem;
+            padding: 1.5rem;
             border-bottom: 1px solid var(--border-color);
         }
 
         .chat-search {
             width: 100%;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-full);
             color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .chat-search:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(77, 163, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            outline: none;
         }
 
         .chat-list {
             flex: 1;
             overflow-y: auto;
+            padding: 1rem 0.5rem;
         }
 
         .chat-item {
@@ -65,17 +76,29 @@
             gap: 1rem;
             padding: 1rem;
             cursor: pointer;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: background 0.2s;
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
         }
 
         .chat-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+            transform: translateY(-1px);
         }
 
         .chat-item.active {
             background: rgba(77, 163, 255, 0.1);
-            border-left: 3px solid var(--primary);
+            border-color: rgba(77, 163, 255, 0.2);
+        }
+
+        .chat-item .avatar {
+            transition: transform 0.2s ease;
+        }
+
+        .chat-item:hover .avatar {
+            transform: scale(1.05);
         }
 
         /* Main Chat Area */
@@ -84,82 +107,151 @@
             display: flex;
             flex-direction: column;
             background: var(--bg-main);
+            position: relative;
+        }
+
+        /* decorative background glow */
+        .chat-main::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(77, 163, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .chat-main-header {
-            padding: 1rem;
+            padding: 1rem 2rem;
             border-bottom: 1px solid var(--border-color);
-            background: var(--card-bg);
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             gap: 1rem;
+            z-index: 10;
+        }
+
+        .chat-main-header #activeName {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
         }
 
         .messages-area {
             flex: 1;
-            padding: 1.5rem;
+            padding: 2rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
+            z-index: 1;
         }
 
         .message-bubble {
-            max-width: 70%;
-            padding: 0.8rem 1rem;
-            border-radius: 12px;
+            max-width: 65%;
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
             position: relative;
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 0.95rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .message-bubble.received {
             background: var(--card-bg);
-            /* Darker grey */
             color: var(--text-primary);
             border: 1px solid var(--border-color);
             align-self: flex-start;
-            border-bottom-left-radius: 2px;
+            border-bottom-left-radius: 4px;
         }
 
         .message-bubble.sent {
-            background: var(--primary);
-            /* Blue */
+            background: linear-gradient(135deg, rgba(77, 163, 255, 0.2) 0%, rgba(61, 105, 255, 0.2) 100%);
             color: white;
             align-self: flex-end;
-            border-bottom-right-radius: 2px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(77, 163, 255, 0.3);
+            backdrop-filter: blur(5px);
         }
 
         .message-time {
             font-size: 0.7rem;
-            margin-top: 4px;
-            opacity: 0.7;
+            margin-top: 6px;
+            opacity: 0.6;
             text-align: right;
             display: block;
+            font-weight: 500;
         }
 
         .chat-input-area {
-            padding: 1rem;
-            border-top: 1px solid var(--border-color);
-            background: var(--card-bg);
+            padding: 1.5rem 2rem;
+            background: transparent;
             display: flex;
             gap: 1rem;
             align-items: flex-end;
+            z-index: 10;
+            position: relative;
+        }
+
+        .chat-input-wrapper {
+            flex: 1;
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 0.25rem;
+            display: flex;
+            align-items: flex-end;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(77, 163, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
         }
 
         .chat-input {
             flex: 1;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 0.8rem 1rem;
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.2rem;
             color: var(--text-primary);
             resize: none;
-            height: 44px;
-            /* Start height */
-            min-height: 44px;
-            max-height: 120px;
+            height: 48px;
+            min-height: 48px;
+            max-height: 150px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4DA3FF 0%, #3D69FF 100%);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 4px;
+            box-shadow: 0 2px 8px rgba(77, 163, 255, 0.4);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(77, 163, 255, 0.6);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
         }
 
         .empty-state {
@@ -171,35 +263,43 @@
             color: var(--text-secondary);
             text-align: center;
         }
+
+        .empty-state h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
     </style>
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <div id="sidebar-placeholder" data-src="mentor-sidebar.html"></div>
-
     <!-- Header -->
-    <header class="header">
-        <div class="dashboard-nav-group">
-            <a href="mentor-dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="contact.html" class="sidebar-nav-item ">
-                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>Contact Us</span>
-            </a>
-            <a href="about.html" class="sidebar-nav-item ">
-                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>About Us</span>
-            </a>
+    <header class="header" style="justify-content: space-between; padding: 0 2rem; width: 100%;left: 0;">
+        <div class="header-logo" style="display: flex; align-items: center; gap: 10px;">
+            <div
+                style="width: 40px; height: 40px; background: rgba(77, 163, 255, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="zap" style="width: 24px; height: 24px; fill: #4DA3FF; color: #4DA3FF;"></i>
+            </div>
+            <div style="font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 1px;">
+                ASCEND</div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <button onclick="window.location.href='mentor-messages.html'"
-                style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
-                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
-            </button>
+            <div class="dashboard-nav-group">
+                <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="contact.html" class="sidebar-nav-item ">
+                    <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                    <span>Contact Us</span>
+                </a>
+                <a href="about.html" class="sidebar-nav-item ">
+                    <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                    <span>About Us</span>
+                </a>
+            </div>
             <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
                 <div class="header-user-info">
                     <div class="header-user-name" id="header-user-name">Loading...</div>
@@ -211,7 +311,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="main-layout" style="padding-top: 80px; height: 100vh; overflow: hidden;">
+    <main style="padding-top: 80px; height: 100vh; overflow: hidden; width: 100%;">
         <div class="page-container" style="height: 100%; padding-bottom: 0;">
 
             <div class="chat-container">
@@ -250,9 +350,14 @@
 
                     <!-- Input -->
                     <div class="chat-input-area" id="chatInputArea" style="display: none;">
-                        <textarea class="chat-input" id="messageInput" placeholder="Type a message..."></textarea>
-                        <button class="btn btn-primary" id="sendBtn"
-                            style="border-radius: 50%; width: 44px; height: 44px; padding: 0;">
+                        <button
+                            style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem; transition: color 0.2s;">
+                            <i data-lucide="paperclip" style="width: 20px; height: 20px;"></i>
+                        </button>
+                        <div class="chat-input-wrapper">
+                            <textarea class="chat-input" id="messageInput" placeholder="Type a message..."></textarea>
+                        </div>
+                        <button class="send-btn" id="sendBtn">
                             <i data-lucide="send" style="width: 18px; height: 18px;"></i>
                         </button>
                     </div>
@@ -335,6 +440,15 @@
 
                 if (profileRes.ok) {
                     const d = await profileRes.json();
+
+                    // Role Check: Redirect if not a mentor
+                    if (d.role && d.role !== 'mentor' && d.role !== 'alumni' && d.role !== 'admin') {
+                        logStatus(`Redirecting: User role '${d.role}' is not authorized.`, 'error');
+                        setTimeout(() => {
+                            window.location.href = 'student-messages.html';
+                        }, 1000); // Small delay to see error log
+                        return;
+                    }
 
                     // Handle nested profile object (d.profile.full_name) OR flat (d.full_name) OR username
                     const profileName = (d.profile && d.profile.full_name) ? d.profile.full_name : null;
