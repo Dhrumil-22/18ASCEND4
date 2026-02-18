@@ -250,7 +250,7 @@
     font-size: var(--font-size-sm);
     font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 8px;
+    margin-top: 13px;
 }
 
 .input-icon {

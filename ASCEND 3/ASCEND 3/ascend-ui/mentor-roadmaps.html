@@ -115,7 +115,7 @@
                     </div>
                 </div>
 
-                <h2 class="section-title">Existing Roadmaps</h2>
+                <h2 class="section-title" style="margin-bottom: 15px;">Existing Roadmaps</h2>
                 <div id="roadmapsContainer" style="display: grid; gap: 1rem;">
                     <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading roadmaps...</p>
                 </div>
@@ -165,7 +165,39 @@
         addStepInput();
 
         async function loadRoadmaps() {
-            // Update Header User Info
+            // 1. Immediate Profile Update from LocalStorage
+            function updateHeaderFromStorage() {
+                try {
+                    const userStr = localStorage.getItem('user');
+                    if (userStr) {
+                        const user = JSON.parse(userStr);
+                        // Try multiple fields to get the name
+                        const name = user.name || user.full_name || user.username || user.user_name || 'Mentor';
+
+                        // Update Name
+                        const nameEl = document.querySelector('.header-user-name');
+                        if (nameEl) nameEl.textContent = name;
+
+                        // Update Initials
+                        const avatarEl = document.querySelector('.header-user .avatar');
+                        if (avatarEl) {
+                            const parts = name.trim().split(/\s+/);
+                            let initials = parts[0][0];
+                            if (parts.length > 1) {
+                                initials += parts[parts.length - 1][0];
+                            }
+                            avatarEl.textContent = initials.toUpperCase();
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error parsing user from localStorage:", e);
+                }
+            }
+
+            // Execute immediately
+            updateHeaderFromStorage();
+
+            // 2. Background Sync with API
             try {
                 const profileRes = await fetch('http://127.0.0.1:5000/api/user/profile', {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -173,8 +205,15 @@
                 if (profileRes.ok) {
                     const d = await profileRes.json();
                     const nameToDisplay = d.full_name || 'Mentor';
-                    document.querySelector('.header-user-name').textContent = nameToDisplay;
-                    document.querySelector('.header-user .avatar').textContent = nameToDisplay.substring(0, 2).toUpperCase();
+
+                    // Update localStorage
+                    const userStr = localStorage.getItem('user');
+                    let user = userStr ? JSON.parse(userStr) : {};
+                    user.name = nameToDisplay;
+                    localStorage.setItem('user', JSON.stringify(user));
+
+                    // Update UI
+                    updateHeaderFromStorage();
                 }
             } catch (e) { }
 
