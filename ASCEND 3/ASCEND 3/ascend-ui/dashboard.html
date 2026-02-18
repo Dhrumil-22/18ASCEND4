@@ -365,7 +365,7 @@
                                     </div>
                                     <div style="display: flex; gap: 5px;">
                                         <button class="btn btn-sm btn-outline" onclick="requestMentorship(${m.id}, '${m.name.replace(/'/g, "\\'")}')">Request</button>
-                                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='student-messages.html?partner_id=' + m.id">Message</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='student-messages.html?partner_id=${m.id}'">Message</button>
                                     </div>
                                 </div>
                             `;

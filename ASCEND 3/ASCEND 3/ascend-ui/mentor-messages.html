@@ -202,10 +202,10 @@
             </button>
             <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
                 <div class="header-user-info">
-                    <div class="header-user-name">Mentor Name</div>
+                    <div class="header-user-name" id="header-user-name">Loading...</div>
                     <div class="header-user-role">Mentor</div>
                 </div>
-                <div class="avatar avatar-md">ME</div>
+                <div class="avatar avatar-md" id="header-user-avatar">..</div>
             </div>
         </div>
     </header>
@@ -262,32 +262,100 @@
         </div>
     </main>
 
+    <div id="systemStatus"
+        style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.9); border: 1px solid #333; color: #0f0; padding: 15px; font-family: monospace; font-size: 12px; z-index: 9999; width: 300px; border-radius: 8px;">
+        <h3 style="margin: 0 0 10px 0; color: #fff; border-bottom: 1px solid #333; padding-bottom: 5px;">System
+            Diagnostics</h3>
+        <div id="statusLog">Initializing...</div>
+        <button onclick="this.parentElement.style.display='none'"
+            style="position: absolute; top: 5px; right: 5px; background: none; border: none; color: #fff; cursor: pointer;">x</button>
+    </div>
+
     <script src="js/navigation.js"></script>
     <script>
         lucide.createIcons();
         let currentPartnerId = null;
         let currentUserInitials = "ME";
 
+        function logStatus(msg, type = 'info') {
+            const log = document.getElementById('statusLog');
+            if (log) {
+                const color = type === 'error' ? 'red' : (type === 'success' ? '#0f0' : '#ccc');
+                log.innerHTML += `<div style="color: ${color}; margin-top: 4px;">> ${msg}</div>`;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('auth_token');
+            logStatus("Checking Auth Token: " + (token ? "OK" : "MISSING"), token ? 'success' : 'error');
+
             if (!token) {
                 window.location.href = 'login.html';
                 return;
             }
 
             // Load User Profile (for Header & Initials)
+            // 1. Try LocalStorage (Instant)
+            logStatus("Checking LocalStorage...");
+            try {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    logStatus("User found in LS: " + (user.full_name || user.name), 'success');
+
+                    const name = user.full_name || user.name || user.username || 'Mentor';
+                    const nameEl = document.getElementById('header-user-name');
+                    if (nameEl) {
+                        nameEl.textContent = name;
+                        logStatus("Updated DOM Name (LS)");
+                    } else {
+                        logStatus("ERROR: Name Element ID not found!", 'error');
+                    }
+
+                    const avatarEl = document.getElementById('header-user-avatar');
+                    if (avatarEl) {
+                        currentUserInitials = name.substring(0, 2).toUpperCase();
+                        avatarEl.textContent = currentUserInitials;
+                    }
+                } else {
+                    logStatus("No User in LocalStorage", 'info');
+                }
+            } catch (e) {
+                logStatus("LS Error: " + e.message, 'error');
+            }
+
+            // 2. Refresh from API
+            logStatus("Fetching API Profile...");
             try {
                 const profileRes = await fetch('http://127.0.0.1:5000/api/user/profile', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
+
+                logStatus("API Status: " + profileRes.status);
+
                 if (profileRes.ok) {
                     const d = await profileRes.json();
-                    const name = d.full_name || 'Mentor';
-                    document.querySelector('.header-user-name').textContent = name;
-                    currentUserInitials = name.substring(0, 2).toUpperCase();
-                    document.querySelector('.header-user .avatar').textContent = currentUserInitials;
+
+                    // Handle nested profile object (d.profile.full_name) OR flat (d.full_name) OR username
+                    const profileName = (d.profile && d.profile.full_name) ? d.profile.full_name : null;
+                    const name = profileName || d.full_name || d.username || 'Mentor';
+
+                    logStatus("API Name Resolved: " + name, 'success');
+
+                    const nameEl = document.getElementById('header-user-name');
+                    if (nameEl) nameEl.textContent = name;
+
+                    const avatarEl = document.getElementById('header-user-avatar');
+                    if (avatarEl) {
+                        currentUserInitials = name.substring(0, 2).toUpperCase();
+                        avatarEl.textContent = currentUserInitials;
+                    }
+                } else {
+                    logStatus("API Error: " + profileRes.status, 'error');
                 }
-            } catch (e) { }
+            } catch (e) {
+                logStatus("API Exception: " + e.message, 'error');
+            }
 
             // Load Mentees List
             await loadMentees();
@@ -448,306 +516,6 @@
             const area = document.getElementById('messagesArea');
             area.scrollTop = area.scrollHeight;
         }
-    </script>
-</body>
-
-</html>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- CSS -->
-<link rel="stylesheet" href="css/variables.css">
-<link rel="stylesheet" href="css/reset.css">
-<link rel="stylesheet" href="css/global.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/pages.css">
-<link rel="stylesheet" href="css/header-style.css">
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="js/include-components.js"></script>
-<style>
-    .page-header {
-        margin-bottom: 2rem;
-    }
-
-    .filter-bar {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-    }
-
-    .search-input {
-        flex: 1;
-        padding: 0.75rem 1rem;
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-color);
-        background: var(--card-bg);
-        color: var(--text-primary);
-    }
-
-    .search-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-    }
-</style>
-</head>
-
-<body>
-    <!-- Sidebar -->
-    <div id="sidebar-placeholder" data-src="mentor-sidebar.html"></div>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="dashboard-nav-group">
-            <a href="mentor-dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="contact.html" class="sidebar-nav-item ">
-                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>Contact Us</span>
-            </a>
-            <a href="about.html" class="sidebar-nav-item ">
-                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>About Us</span>
-            </a>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <button onclick="window.location.href='mentor-messages.html'"
-                style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
-                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
-            </button>
-            <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
-                <div class="header-user-info">
-                    <div class="header-user-name">Mentor Name</div>
-                    <div class="header-user-role">Mentor</div>
-                </div>
-                <div class="avatar avatar-md">ME</div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main-layout">
-        <div class="page-container">
-            <div class="main-content">
-                <div class="page-header">
-                    <h1 class="page-title">Student Messages</h1>
-                    <p class="text-secondary">View and answer questions from students.</p>
-                </div>
-
-                <!-- Filters -->
-                <div class="filter-bar">
-                    <input type="text" id="searchQuestion" class="search-input" placeholder="Search questions...">
-                    <!-- Potentially add status filters here later -->
-                </div>
-
-                <!-- Questions List -->
-                <div class="card">
-                    <div id="questionsContainer">
-                        <p
-                            style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
-                            Loading messages...</p>
-                    </div>
-                </div>
-
-            </div>
-            <!-- Footer -->
-            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
-        </div>
-    </main>
-
-    <!-- Answer Modal -->
-    <div id="answerModal"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-        <div
-            style="background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; border: 1px solid rgba(255,255,255,0.1);">
-            <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Answer Question</h2>
-            <div id="modalQuestionContent"
-                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">
-                Loading question...
-            </div>
-            <form id="answerForm">
-                <input type="hidden" id="modalQuestionId">
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-primary);">Your
-                        Answer</label>
-                    <textarea id="answerContent"
-                        style="width: 100%; min-height: 150px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 1rem; border-radius: 8px;"
-                        placeholder="Write your helpful response here..." required></textarea>
-                </div>
-                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeAnswerModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit Answer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="js/navigation.js"></script>
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Modal Functions
-        const modal = document.getElementById('answerModal');
-        const answerForm = document.getElementById('answerForm');
-
-        function openAnswerModal(questionId, questionContent) {
-            document.getElementById('modalQuestionId').value = questionId;
-            document.getElementById('modalQuestionContent').textContent = questionContent;
-            modal.style.display = 'flex';
-        }
-
-        function closeAnswerModal() {
-            modal.style.display = 'none';
-            answerForm.reset();
-        }
-
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeAnswerModal();
-        });
-
-        // Handle Answer Submission
-        answerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const questionId = document.getElementById('modalQuestionId').value;
-            const content = document.getElementById('answerContent').value;
-            const token = localStorage.getItem('auth_token');
-
-            try {
-                const response = await fetch(`http://127.0.0.1:5000/api/questions/${questionId}/reply`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ content })
-                });
-
-                if (response.ok) {
-                    alert('Answer submitted successfully!');
-                    closeAnswerModal();
-                    // Refresh data
-                    fetchQuestions();
-                } else {
-                    const data = await response.json();
-                    alert(data.error || 'Failed to submit answer');
-                }
-            } catch (error) {
-                console.error('Error submitting answer:', error);
-                alert('An error occurred. Please try again.');
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            window.location.href = 'index.html';
-        });
-
-        async function fetchQuestions() {
-            const token = localStorage.getItem('auth_token');
-            const questionsContainer = document.getElementById('questionsContainer');
-
-            try {
-                const response = await fetch('http://127.0.0.1:5000/api/mentor/questions', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const questions = await response.json();
-                    questionsContainer.innerHTML = '';
-
-                    if (questions.length === 0) {
-                        questionsContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No unanswered questions found.</p>';
-                        return;
-                    }
-
-                    questions.forEach(q => {
-                        // Escape single quotes for the function call
-                        const safeContent = q.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-
-                        const urgentBadge = q.is_urgent ?
-                            `<span style="background: rgba(255, 215, 0, 0.1); color: #FFD700; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; border: 1px solid rgba(255, 215, 0, 0.3); margin-left: 0.5rem; display: inline-flex; align-items: center; gap: 4px;">
-                                <i data-lucide="zap" style="width: 10px; height: 10px;"></i> URGENT (${q.bounty} pts)
-                            </span>` : '';
-
-                        const html = `
-                            <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start;">
-                                <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">${q.author_initials}</div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 1rem; margin-bottom: 0.25rem;">
-                                        ${q.title}
-                                        ${urgentBadge}
-                                    </div>
-                                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content}</div>
-                                    <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary);">
-                                        <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author}</span>
-                                        <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary btn-sm" onclick="openAnswerModal(${q.id}, '${safeContent}')">Answer</button>
-                            </div>
-                        `;
-                        questionsContainer.insertAdjacentHTML('beforeend', html);
-                    });
-                    lucide.createIcons();
-                } else {
-                    console.error('Failed to fetch questions');
-                    if (response.status === 401 || response.status === 403) {
-                        window.location.href = 'login.html';
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching questions:', error);
-                questionsContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--error-color);">Error loading questions.</p>';
-            }
-        }
-
-        // Fetch Data
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('auth_token');
-            const userStr = localStorage.getItem('user');
-
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            let user = null;
-            if (userStr) {
-                try {
-                    user = JSON.parse(userStr);
-                    const displayName = user.name || user.username || 'Mentor';
-                    document.querySelector('.header-user-name').textContent = displayName;
-                    document.querySelector('.header-user .avatar').textContent = displayName.substring(0, 2).toUpperCase();
-                } catch (e) { }
-            }
-
-            await fetchQuestions();
-
-            // Search functionality
-            const searchInput = document.getElementById('searchQuestion');
-            searchInput.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const items = document.querySelectorAll('#questionsContainer > div'); // direct children divs
-                let hasVisible = false;
-
-                items.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    if (text.includes(term)) {
-                        item.style.display = 'flex';
-                        hasVisible = true;
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-        });
     </script>
 </body>
 

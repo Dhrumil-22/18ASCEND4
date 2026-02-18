@@ -165,10 +165,10 @@
             </button>
             <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
                 <div class="header-user-info">
-                    <div class="header-user-name">Mentor Name</div>
+                    <div class="header-user-name" id="header-user-name">Loading...</div>
                     <div class="header-user-role">Mentor</div>
                 </div>
-                <div class="avatar avatar-md">ME</div>
+                <div class="avatar avatar-md" id="header-user-avatar">..</div>
             </div>
         </div>
     </header>
@@ -226,18 +226,47 @@
                 return;
             }
 
-            // Fetch Profile for Header
+            // Load User Profile (for Header & Initials)
+            // 1. Try LocalStorage (Instant)
+            try {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    const name = user.full_name || user.name || user.username || 'Mentor';
+
+                    const nameEl = document.getElementById('header-user-name');
+                    if (nameEl) nameEl.textContent = name;
+
+                    const avatarEl = document.getElementById('header-user-avatar');
+                    if (avatarEl) {
+                        avatarEl.textContent = name.substring(0, 2).toUpperCase();
+                    }
+                }
+            } catch (e) { }
+
+            // 2. Refresh from API
             try {
                 const profileRes = await fetch('http://127.0.0.1:5000/api/user/profile', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (profileRes.ok) {
                     const d = await profileRes.json();
-                    const nameToDisplay = d.full_name || 'Mentor';
-                    document.querySelector('.header-user-name').textContent = nameToDisplay;
-                    document.querySelector('.header-user .avatar').textContent = nameToDisplay.substring(0, 2).toUpperCase();
+
+                    // Handle nested profile object (d.profile.full_name) OR flat (d.full_name) OR username
+                    const profileName = (d.profile && d.profile.full_name) ? d.profile.full_name : null;
+                    const name = profileName || d.full_name || d.username || 'Mentor';
+
+                    const nameEl = document.getElementById('header-user-name');
+                    if (nameEl) nameEl.textContent = name;
+
+                    const avatarEl = document.getElementById('header-user-avatar');
+                    if (avatarEl) {
+                        avatarEl.textContent = name.substring(0, 2).toUpperCase();
+                    }
                 }
-            } catch (e) { }
+            } catch (e) {
+                console.error("Failed to load profile", e);
+            }
 
             // Fetch Mentees
             try {
@@ -276,7 +305,7 @@
                                     <strong style="display: block; font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 0.25rem;">Current Goal:</strong>
                                     ${m.goal}
                                 </div>
-                                <button class="btn btn-secondary btn-sm" style="width: 100%; margin-top: auto;" href="mentor-messages.html">Message Mentee</button>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%; margin-top: auto;" onclick="window.location.href='mentor-messages.html?partner_id=${m.id}'">Message Mentee</button>
                             </div>
                         `;
                         container.insertAdjacentHTML('beforeend', html);

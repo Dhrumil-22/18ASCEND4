@@ -104,10 +104,10 @@
             </button>
             <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
                 <div class="header-user-info">
-                    <div class="header-user-name">Mentor Name</div>
+                    <div class="header-user-name" id="header-user-name">Loading...</div>
                     <div class="header-user-role">Mentor</div>
                 </div>
-                <div class="avatar avatar-md">ME</div>
+                <div class="avatar avatar-md" id="header-user-avatar">..</div>
             </div>
         </div>
     </header>
@@ -270,10 +270,27 @@
             if (userStr) {
                 try {
                     user = JSON.parse(userStr);
-                    const displayName = user.name || user.username || 'Mentor';
+                    const displayName = user.full_name || user.name || user.username || 'Mentor';
                     document.querySelector('.header-user-name').textContent = displayName;
                     document.querySelector('.header-user .avatar').textContent = displayName.substring(0, 2).toUpperCase();
                 } catch (e) { }
+            }
+
+            // Refresh from API to ensure we have the latest name/profile
+            try {
+                const profileRes = await fetch('http://127.0.0.1:5000/api/user/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (profileRes.ok) {
+                    const d = await profileRes.json();
+                    const profileName = (d.profile && d.profile.full_name) ? d.profile.full_name : null;
+                    const name = profileName || d.full_name || d.username || 'Mentor';
+
+                    document.querySelector('.header-user-name').textContent = name;
+                    document.querySelector('.header-user .avatar').textContent = name.substring(0, 2).toUpperCase();
+                }
+            } catch (e) {
+                console.error("Failed to load profile", e);
             }
 
             await fetchQuestions();

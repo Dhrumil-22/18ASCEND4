@@ -30,7 +30,18 @@
     <!-- Header -->
     <header class="header">
         <div class="dashboard-nav-group">
-            <!-- Nav links removed as per request -->
+            <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
         </div>
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
@@ -96,6 +107,39 @@
                             </form>
                         </div>
                     </div>
+                    <!-- Preview Card -->
+                    <div>
+                        <h3
+                            style="margin-bottom: 16px; font-size: 14px; color: var(--text-secondary); text-transform: uppercase;">
+                            Public Preview</h3>
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-xl"
+                                    style="margin: 0 auto 16px auto; width: 80px; height: 80px; font-size: 2rem;"
+                                    id="previewAvatar">ME</div>
+                                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 4px;" id="previewName">
+                                    Mentor Name</h3>
+                                <p style="color: var(--primary); margin-bottom: 16px;" id="previewRole">Mentor Role</p>
+
+                                <div style="text-align: left; margin-top: 24px;">
+                                    <h4
+                                        style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+                                        Bio</h4>
+                                    <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-primary);"
+                                        id="previewBio">No bio added yet.</p>
+                                </div>
+
+                                <div style="text-align: left; margin-top: 24px;">
+                                    <h4
+                                        style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+                                        Expertise</h4>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="previewSkills">
+                                        <span class="badge">No skills added</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -140,9 +184,22 @@
                         if (document.getElementById('fullName')) document.getElementById('fullName').value = data.profile.full_name || '';
                         if (document.getElementById('currentGoalInput')) document.getElementById('currentGoalInput').value = data.profile.current_goal || '';
                         if (document.getElementById('bio')) document.getElementById('bio').value = data.profile.bio || '';
+
+                        // Populate Preview Card
+                        const name = data.profile.full_name || data.username || 'Mentor';
+                        document.getElementById('previewName').textContent = name;
+                        document.getElementById('previewRole').textContent = data.profile.current_goal || 'Mentor';
+                        document.getElementById('previewBio').textContent = data.profile.bio || 'No bio added.';
+                        document.getElementById('previewAvatar').textContent = name.substring(0, 2).toUpperCase();
                     }
                     if (data.skills) {
                         if (document.getElementById('skillsInput')) document.getElementById('skillsInput').value = data.skills.join(', ');
+
+                        // Populate Skills Preview
+                        if (data.skills.length > 0) {
+                            const skillsContainer = document.getElementById('previewSkills');
+                            skillsContainer.innerHTML = data.skills.map(s => `<span class="badge" style="background: rgba(77, 163, 255, 0.1); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">${s}</span>`).join('');
+                        }
                     }
                 }
             } catch (error) {
@@ -176,6 +233,20 @@
 
                 if (response.ok) {
                     alert('Profile updated!');
+
+                    // Optimistic Update of Preview
+                    document.getElementById('previewName').textContent = fullName;
+                    document.getElementById('previewRole').textContent = currentGoal;
+                    document.getElementById('previewBio').textContent = bio;
+                    document.getElementById('previewAvatar').textContent = fullName.substring(0, 2).toUpperCase();
+
+                    const skillsArr = skills.split(',').map(s => s.trim()).filter(s => s);
+                    const skillsContainer = document.getElementById('previewSkills');
+                    if (skillsArr.length > 0) {
+                        skillsContainer.innerHTML = skillsArr.map(s => `<span class="badge" style="background: rgba(77, 163, 255, 0.1); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">${s}</span>`).join('');
+                    } else {
+                        skillsContainer.innerHTML = '<span class="badge">No skills added</span>';
+                    }
                 } else {
                     alert('Failed to update.');
                 }

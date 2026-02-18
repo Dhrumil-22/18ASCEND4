@@ -354,17 +354,36 @@
             const token = localStorage.getItem('auth_token');
             if (!token) return;
 
-            // Fetch User Profile for Header
+            // Load User Profile (for Header & Initials)
+            // 1. Try LocalStorage (Instant)
+            try {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    const name = user.full_name || user.name || user.username || 'Student';
+                    const headerName = document.querySelector('.header-user-name');
+                    if (headerName) headerName.textContent = name;
+                    const headerAvatar = document.querySelector('.header-user .avatar');
+                    if (headerAvatar) headerAvatar.textContent = name.substring(0, 2).toUpperCase();
+                }
+            } catch (e) { }
+
+            // 2. Refresh from API
             try {
                 const profileResp = await fetch('http://127.0.0.1:5000/api/user/profile', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (profileResp.ok) {
-                    const data = await profileResp.json();
+                    const d = await profileResp.json();
+
+                    // Handle nested profile object (d.profile.full_name) OR flat (d.full_name) OR username
+                    const profileName = (d.profile && d.profile.full_name) ? d.profile.full_name : null;
+                    const name = profileName || d.full_name || d.username || 'Student';
+
                     const headerName = document.querySelector('.header-user-name');
-                    if (headerName) headerName.textContent = data.profile.full_name || data.username;
+                    if (headerName) headerName.textContent = name;
                     const headerAvatar = document.querySelector('.header-user .avatar');
-                    if (headerAvatar) headerAvatar.textContent = (data.profile.full_name || data.username).substring(0, 2).toUpperCase();
+                    if (headerAvatar) headerAvatar.textContent = name.substring(0, 2).toUpperCase();
                 }
             } catch (e) { console.error("Profile fetch error", e); }
 
@@ -404,7 +423,7 @@
                                 <div class="mentor-bio">
                                     ${m.bio}
                                 </div>
-                                <button class="btn btn-primary" onclick="window.location.href='student-messages.html?partner_id=' + m.id">
+                                <button class="btn btn-primary" onclick="window.location.href='student-messages.html?partner_id=${m.id}'">
                                     Message
                                 </button>
                             </div>

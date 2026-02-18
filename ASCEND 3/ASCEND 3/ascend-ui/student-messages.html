@@ -365,20 +365,37 @@
             }
 
             // Load User Profile (for Header & Initials)
+            // 1. Try LocalStorage (Instant)
+            try {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    const name = user.full_name || user.name || user.username || 'Student';
+                    document.querySelector('.header-user-name').textContent = name;
+                    currentUserInitials = name.substring(0, 2).toUpperCase();
+                    document.querySelector('.header-user .avatar').textContent = currentUserInitials;
+                }
+            } catch (e) { }
+
+            // 2. Refresh from API
             try {
                 const profileRes = await fetch('http://127.0.0.1:5000/api/user/profile', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (profileRes.ok) {
                     const d = await profileRes.json();
-                    const name = d.profile.full_name || d.username || 'Student';
+
+                    // Handle nested profile object (d.profile.full_name) OR flat (d.full_name) OR username
+                    const profileName = (d.profile && d.profile.full_name) ? d.profile.full_name : null;
+                    const name = profileName || d.full_name || d.username || 'Student';
+
                     document.querySelector('.header-user-name').textContent = name;
                     currentUserInitials = name.substring(0, 2).toUpperCase();
                     document.querySelector('.header-user .avatar').textContent = currentUserInitials;
-
-                    // Also update points if possible (mock logic or duplicate call)
                 }
-            } catch (e) { }
+            } catch (e) {
+                console.error("Failed to load profile", e);
+            }
 
             // Load Mentors List (Instead of Mentees)
             await loadMentors();
