@@ -14,61 +14,96 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
+    <style>
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .timeline-content {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-link {
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .timeline-link:hover {
+            text-decoration: underline;
+        }
+    </style>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
 </head>
 
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">⚡</div>
-            <div class="sidebar-logo-text">ASCEND</div>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="career-exploration.html?tab=roadmaps" class="sidebar-nav-item active">
-                <i data-lucide="map" style="width: 20px; height: 20px;"></i>
-                <span>Roadmaps</span>
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <div class="sidebar-nav-item" id="collapseBtn">
-                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Collapse</span>
-            </div>
-
-            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
-                <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
-    </aside>
-
-    <!-- Header -->
-    <header class="header">
-        <!-- ... Header content ... -->
-        <div class="header-search">
-            <div class="input-icon">
-                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
-                <input type="text" class="input" placeholder="Search...">
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <button class="btn btn-secondary btn-sm">
-                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-            </button>
-            <div class="header-user">
-                <div class="header-user-info">
-                    <div class="header-user-name" id="userNameDisplay">Mentor</div>
-                    <div class="header-user-role">Mentor</div>
-                </div>
-                <div class="avatar avatar-md" id="userAvatar">ME</div>
-            </div>
-        </div>
-    </header>
+    <!-- Integrated Navigation Placeholder (Loads Sidebar and Header) -->
+    <div id="navigation-placeholder" data-src="dashboard-navigation.html"></div>
 
     <main class="main-layout">
         <div class="page-container">
@@ -79,24 +114,32 @@
                         <i data-lucide="arrow-left" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Back
                         to Roadmaps
                     </a>
-                    <h1 class="page-title" id="roadmapTitle">Loading...</h1>
-                    <p class="text-secondary" id="roadmapDesc">...</p>
+                    <h1 class="page-title" id="roadmapTitle" style="margin-bottom: 0.5rem;">Loading...</h1>
+                    <p class="text-secondary" id="roadmapDesc">Please wait while we fetch the roadmap details.</p>
                 </div>
 
                 <div class="card">
                     <div class="card-body">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
-                            <div class="avatar avatar-md" id="creatorAvatar">?</div>
+                        <div
+                            style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                            <div class="avatar avatar-md" id="creatorAvatar"
+                                style="background-color: var(--primary); color: white;">?</div>
                             <div>
-                                <div style="font-weight: 600;" id="creatorName">Unknown</div>
+                                <div style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary);"
+                                    id="creatorName">Unknown</div>
                                 <div style="color: var(--text-secondary); font-size: 0.9rem;" id="creatorRole">Mentor
                                 </div>
                             </div>
                         </div>
 
-                        <h3 style="margin-bottom: 1rem;">Roadmap Steps</h3>
-                        <div id="stepsContainer">
-                            <!-- Steps loaded here -->
+                        <h3
+                            style="margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="list" style="width: 20px; height: 20px;"></i>
+                            Roadmap Modules
+                        </h3>
+                        <div id="stepsContainer" class="timeline">
+                            <p style="text-align: center; color: var(--text-secondary); padding: 1rem;">Loading
+                                modules...</p>
                         </div>
                     </div>
                 </div>
@@ -131,53 +174,91 @@
 
                 if (response.ok) {
                     const r = await response.json();
-                    document.getElementById('roadmapTitle').textContent = r.title;
-                    document.getElementById('roadmapDesc').textContent = r.description;
-                    document.getElementById('creatorName').textContent = r.creator;
+                    document.getElementById('roadmapTitle').textContent = r.title || 'Untitled Roadmap';
+                    document.getElementById('roadmapDesc').textContent = r.description || 'No description available.';
+
+                    const creatorName = r.creator || 'Unknown Mentor';
+                    document.getElementById('creatorName').textContent = creatorName;
                     document.getElementById('creatorRole').textContent = r.creator_role || 'Mentor';
-                    document.getElementById('creatorAvatar').textContent = r.creator.substring(0, 2).toUpperCase();
+                    document.getElementById('creatorAvatar').textContent = creatorName.substring(0, 2).toUpperCase();
 
                     const container = document.getElementById('stepsContainer');
-                    if (r.steps) {
-                        // Steps might be JSON or text. Let's try to parse if JSON, else split by newlines
-                        let steps = [];
+                    container.innerHTML = ''; // Clear loading message
+
+                    // Handle Steps Parsing - Robust Logic
+                    let steps = [];
+                    let parsedSteps = r.steps;
+
+                    // 1. Try to parse if it's a string
+                    if (typeof r.steps === 'string') {
                         try {
-                            steps = JSON.parse(r.steps);
-                        } catch (e) {
-                            // Treat as newline separated text
-                            if (typeof r.steps === 'string') {
-                                steps = r.steps.split('\n').filter(s => s.trim() !== '').map(s => ({ title: s }));
+                            // Handle Python-style single quotes if present
+                            if (r.steps.includes("'")) {
+                                parsedSteps = JSON.parse(r.steps.replace(/'/g, '"'));
+                            } else {
+                                parsedSteps = JSON.parse(r.steps);
                             }
+                        } catch (e) {
+                            // If JSON parse fails, maybe it's a simple multiline string?
+                            steps = r.steps.split('\n').filter(s => s.trim() !== '').map(s => ({ title: s }));
                         }
-
-                        if (Array.isArray(steps)) {
-                            steps.forEach((step, index) => {
-                                // If step is object with title/desc, use that. Else just string.
-                                const title = step.title || step;
-                                const desc = step.description || '';
-
-                                const html = `
-                                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                                        <div style="width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">${index + 1}</div>
-                                        <div>
-                                            <h4 style="font-weight: 600; margin-bottom: 0.25rem;">${title}</h4>
-                                            <p style="color: var(--text-secondary); line-height: 1.5;">${desc}</p>
-                                        </div>
-                                    </div>
-                                `;
-                                container.insertAdjacentHTML('beforeend', html);
-                            });
-                        } else {
-                            container.innerHTML = '<p>' + r.steps + '</p>';
-                        }
-                    } else {
-                        container.innerHTML = '<p style="color: var(--text-secondary);">No steps defined for this roadmap.</p>';
                     }
+
+                    // 2. Extract modules from the parsed object/array
+                    if (typeof parsedSteps === 'object' && parsedSteps !== null) {
+                        if (Array.isArray(parsedSteps)) {
+                            steps = parsedSteps;
+                        } else if (parsedSteps.modules && Array.isArray(parsedSteps.modules)) {
+                            steps = parsedSteps.modules;
+                        } else {
+                            // Fallback if structure is unknown or empty object
+                            console.log("Parsed steps object has no modules array:", parsedSteps);
+                        }
+                    }
+
+                    // Render Steps
+                    if (Array.isArray(steps) && steps.length > 0) {
+                        steps.forEach((step, index) => {
+                            const title = step.title || step.name || step; // Fallback to string itself
+                            const desc = step.content || step.description || '';
+                            const link = step.link || '#';
+                            const hasLink = step.link && step.link.trim() !== '';
+
+                            // Skip if it's just an object with no title (empty)
+                            if (typeof step === 'object' && !title && !desc) return;
+
+                            const html = `
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">${index + 1}</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">${title}</h4>
+                                        ${desc ? `<p class="timeline-desc">${desc}</p>` : ''}
+                                        ${hasLink ? `
+                                            <a href="${link}" target="_blank" class="timeline-link">
+                                                <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                                                View Resource
+                                            </a>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                            container.insertAdjacentHTML('beforeend', html);
+                        });
+                    } else {
+                        container.innerHTML = '<p style="color: var(--text-secondary); margin-left: -1rem;">No modules found for this roadmap.</p>';
+                    }
+
+                    lucide.createIcons();
                 } else {
-                    alert('Roadmap not found');
+                    document.getElementById('roadmapTitle').textContent = 'Roadmap Not Found';
+                    document.getElementById('roadmapDesc').textContent = 'The requested roadmap could not be loaded.';
+                    document.getElementById('stepsContainer').innerHTML = '';
+                    // alert('Roadmap not found');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                document.getElementById('roadmapTitle').textContent = 'Error Loading Roadmap';
+                document.getElementById('roadmapDesc').textContent = 'An error occurred while loading details.';
             }
         });
     </script>
