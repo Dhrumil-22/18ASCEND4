@@ -141,6 +141,11 @@ def get_dashboard():
 @login_required
 def get_all_mentors():
     mentors = User.query.filter(User.role.in_(['alumni', 'mentor'])).all()
+    
+    # Get connection statuses for current user
+    my_requests = MentorshipRequest.query.filter_by(student_id=current_user.id).all()
+    status_map = {r.mentor_id: r.status for r in my_requests}
+
     mentors_data = []
     for m in mentors:
         company_name = "Unknown"
@@ -157,7 +162,8 @@ def get_all_mentors():
             'role': job_role,
             'company': company_name,
             'bio': m.profile_info.bio if m.profile_info else "No bio available.",
-            'initials': (m.profile_info.full_name if m.profile_info and m.profile_info.full_name else m.username)[:2].upper()
+            'initials': (m.profile_info.full_name if m.profile_info and m.profile_info.full_name else m.username)[:2].upper(),
+            'connection_status': status_map.get(m.id, 'none')
         })
     return jsonify(mentors_data)
 

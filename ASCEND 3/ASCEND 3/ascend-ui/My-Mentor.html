@@ -284,23 +284,48 @@
                     }
 
                     mentors.forEach(m => {
+                        let buttonHtml = '';
+
+                        if (m.connection_status === 'accepted') {
+                            buttonHtml = `<button class="btn btn-secondary"
+                            onclick="window.location.href='student-messages.html?partner_id=${m.id}'">
+                            Message
+                        </button>`;
+                        }
+                        else if (m.connection_status === 'pending') {
+                            buttonHtml = `<button class="btn btn-primary" disabled
+                            style="opacity:0.7;cursor:not-allowed;">
+                            Request Sent
+                        </button>`;
+                        }
+                        else if (m.connection_status === 'rejected') {
+                            buttonHtml = `<button class="btn btn-danger" disabled
+                            style="opacity:0.7;cursor:not-allowed;">
+                            Rejected
+                        </button>`;
+                        }
+                        else {
+                            buttonHtml = `<button class="btn btn-primary"
+                            onclick="requestMentorship(${m.id}, '${m.name.replace(/'/g, "\\'")}')">
+                            Connect
+                        </button>`;
+                        }
+
                         const html = `
-                            <div class="mentor-card-lg">
-                                <div class="mentor-header">
-                                    <div class="avatar avatar-lg">${m.initials}</div>
-                                    <div class="mentor-info">
-                                        <h3>${m.name}</h3>
-                                        <p>${m.role} at ${m.company}</p>
-                                    </div>
-                                </div>
-                                <div class="mentor-bio">
-                                    ${m.bio}
-                                </div>
-                                <button class="btn btn-primary" onclick="requestMentorship(${m.id}, '${m.name.replace(/'/g, "\\'")}')">
-                                    Connect
-                                </button>
-                            </div>
-                         `;
+        <div class="mentor-card-lg">
+            <div class="mentor-header">
+                <div class="avatar avatar-lg">${m.initials}</div>
+                <div class="mentor-info">
+                    <h3>${m.name}</h3>
+                    <p>${m.role} at ${m.company}</p>
+                </div>
+            </div>
+            <div class="mentor-bio">
+                ${m.bio}
+            </div>
+            ${buttonHtml}
+        </div>
+    `;
                         container.insertAdjacentHTML('beforeend', html);
                     });
                 }
