@@ -125,6 +125,7 @@ def get_dashboard():
 
     return jsonify({
         'user_name': user_name,
+        'points': current_user.points,
         'stats': {
             'questions': question_count,
             'responses': mentor_responses,
@@ -273,7 +274,7 @@ def get_discussions():
 @api.route('/questions', methods=['GET'])
 @login_required
 def get_questions():
-    questions = Question.query.order_by(Question.created_at.desc()).all()
+    questions = Question.query.order_by(Question.is_urgent.desc(), Question.bounty.desc(), Question.created_at.desc()).all()
     output = []
     for q in questions:
         author = q.author
@@ -291,6 +292,8 @@ def get_questions():
             'id': q.id,
             'title': q.title,
             'content': q.content,
+            'is_urgent': q.is_urgent,
+            'bounty': q.bounty,
             'author_name': author.profile_info.full_name if author.profile_info and author.profile_info.full_name else author.username,
             'author_initials': author.username[:2].upper(),
             'created_at': q.created_at.strftime("%Y-%m-%d"),
@@ -304,19 +307,30 @@ def create_question():
     data = request.get_json()
     title = data.get('title')
     content = data.get('content')
+    is_urgent = data.get('is_urgent', False)
+    bounty = int(data.get('bounty', 0)) if is_urgent else 0
     
     if not title or not content:
         return jsonify({'error': 'Title and content are required'}), 400
         
+    # Points Logic
+    if is_urgent:
+        if current_user.points < bounty:
+             return jsonify({'error': 'Insufficient points for this bounty'}), 400
+        # Deduct points
+        current_user.points -= bounty
+        
     question = Question(
         title=title,
         content=content,
-        user_id=current_user.id
+        user_id=current_user.id,
+        is_urgent=is_urgent,
+        bounty=bounty
     )
     db.session.add(question)
     db.session.commit()
     
-    return jsonify({'message': 'Question created successfully', 'id': question.id}), 201
+    return jsonify({'message': 'Question created successfully', 'id': question.id, 'points_remaining': current_user.points}), 201
 
 @api.route('/questions/<int:question_id>/reply', methods=['POST'])
 @login_required
@@ -376,6 +390,22 @@ def get_mentor_dashboard():
             'time': q.created_at.strftime("%Y-%m-%d")
         })
 
+    # Fetch Urgent Questions (Unanswered) sorted by bounty
+    urgent_questions = Question.query.outerjoin(Reply).filter(Reply.id == None, Question.is_urgent == True).order_by(Question.bounty.desc(), Question.created_at.desc()).limit(5).all()
+    
+    urgent_data = []
+    for q in urgent_questions:
+        author_name = q.author.profile_info.full_name if q.author.profile_info and q.author.profile_info.full_name else q.author.username
+        urgent_data.append({
+            'id': q.id,
+            'title': q.title,
+            'content': q.content,
+            'author': author_name,
+            'author_initials': author_name[:2].upper(),
+            'time': q.created_at.strftime("%Y-%m-%d"),
+            'bounty': q.bounty
+        })
+
     return jsonify({
         'user_name': user_name,
         'stats': {
@@ -383,8 +413,35 @@ def get_mentor_dashboard():
             'requests': requests_count,
             'sessions': sessions_count
         },
-        'questions': questions_data
+        'questions': questions_data,
+        'urgent_questions': urgent_data
     })
+
+@api.route('/mentor/questions', methods=['GET'])
+@login_required
+def get_all_mentor_questions():
+    # Only allow mentors/alumni
+    if current_user.role not in ['mentor', 'alumni']:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    # Fetch ALL questions that have NO replies (unanswered)
+    unanswered_questions = Question.query.outerjoin(Reply).filter(Reply.id == None).order_by(Question.created_at.desc()).all()
+    
+    questions_data = []
+    for q in unanswered_questions:
+        author_name = q.author.profile_info.full_name if q.author.profile_info and q.author.profile_info.full_name else q.author.username
+        questions_data.append({
+            'id': q.id,
+            'title': q.title,
+            'content': q.content,
+            'author': author_name,
+            'author_initials': author_name[:2].upper(),
+            'time': q.created_at.strftime("%Y-%m-%d"),
+            'is_urgent': q.is_urgent,
+            'bounty': q.bounty
+        })
+
+    return jsonify(questions_data)
 
 @api.route('/roadmaps', methods=['POST'])
 @login_required

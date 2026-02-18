@@ -254,6 +254,68 @@
                                     style="min-height: 180px; padding: 1rem;" required></textarea>
                             </div>
 
+                            <!-- Urgent / Bounty Section -->
+                            <div
+                                style="margin-bottom: 2.5rem; background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <div>
+                                        <label class="form-label-premium" style="margin-bottom: 0.25rem;">Mark as
+                                            Urgent</label>
+                                        <span class="form-subtext" style="margin-bottom: 0;">Get faster responses by
+                                            spending points.</span>
+                                    </div>
+                                    <label class="switch"
+                                        style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                                        <input type="checkbox" id="urgentToggle" onchange="toggleBountyInput()">
+                                        <span class="slider round"
+                                            style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
+                                        <style>
+                                            .switch input {
+                                                opacity: 0;
+                                                width: 0;
+                                                height: 0;
+                                            }
+
+                                            .slider.round:before {
+                                                position: absolute;
+                                                content: "";
+                                                height: 18px;
+                                                width: 18px;
+                                                left: 4px;
+                                                bottom: 4px;
+                                                background-color: white;
+                                                transition: .4s;
+                                                border-radius: 50%;
+                                            }
+
+                                            input:checked+.slider {
+                                                background-color: var(--primary);
+                                            }
+
+                                            input:checked+.slider:before {
+                                                transform: translateX(24px);
+                                            }
+                                        </style>
+                                    </label>
+                                </div>
+
+                                <div id="bountyContainer" style="display: none; transition: all 0.3s ease;">
+                                    <label class="form-label-premium" for="bountyPoints">Bounty Points</label>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <input type="number" id="bountyPoints" class="input premium-input"
+                                            placeholder="Ex: 20" min="10" style="width: 120px;">
+                                        <span style="color: var(--text-secondary); font-size: 0.9rem;">
+                                            Available Points: <strong id="userPointsDisplay"
+                                                style="color: var(--primary);">Loading...</strong>
+                                        </span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: 0.5rem;">
+                                        Higher bounty questions appear at the top of the mentor's dashboard.
+                                    </p>
+                                </div>
+                            </div>
+
                             <!-- Submit Button -->
                             <div
                                 style="display: flex; gap: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
@@ -331,6 +393,46 @@
             }
         });
 
+        let currentUserPoints = 0;
+
+        function toggleBountyInput() {
+            const isChecked = document.getElementById('urgentToggle').checked;
+            const container = document.getElementById('bountyContainer');
+            const bountyInput = document.getElementById('bountyPoints');
+
+            if (isChecked) {
+                container.style.display = 'block';
+                bountyInput.setAttribute('required', 'true');
+                fetchUserPoints();
+            } else {
+                container.style.display = 'none';
+                bountyInput.removeAttribute('required');
+                bountyInput.value = '';
+            }
+        }
+
+        async function fetchUserPoints() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/auth/status', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (data.authenticated) {
+                    currentUserPoints = data.user.points || 0;
+                    document.getElementById('userPointsDisplay').textContent = currentUserPoints;
+                }
+            } catch (e) {
+                console.error("Failed to fetch points", e);
+                document.getElementById('userPointsDisplay').textContent = 'Error';
+            }
+        }
+
+        // Initialize points on load just in case
+        document.addEventListener('DOMContentLoaded', fetchUserPoints);
+
         // Form submission
         document.getElementById('questionForm').addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -345,6 +447,20 @@
             // Collect data
             const role = document.getElementById('targetRole').value;
             const questionText = document.getElementById('question').value;
+            const isUrgent = document.getElementById('urgentToggle').checked;
+            const bounty = isUrgent ? parseInt(document.getElementById('bountyPoints').value) : 0;
+
+            // Validate Points
+            if (isUrgent) {
+                if (isNaN(bounty) || bounty <= 0) {
+                    alert("Please enter a valid bounty amount.");
+                    return;
+                }
+                if (bounty > currentUserPoints) {
+                    alert(`You only have ${currentUserPoints} points. Please lower your bounty.`);
+                    return;
+                }
+            }
 
             // Collect skills
             const skills = [];
@@ -363,10 +479,22 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ title, content })
+                    body: JSON.stringify({
+                        title,
+                        content,
+                        is_urgent: isUrgent,
+                        bounty: bounty
+                    })
                 });
 
                 if (response.ok) {
+                    // Update local points if returned
+                    const resData = await response.json();
+                    if (resData.points_remaining !== undefined) {
+                        currentUserPoints = resData.points_remaining;
+                        document.getElementById('userPointsDisplay').textContent = currentUserPoints;
+                    }
+
                     // Show success message
                     document.getElementById('successMessage').style.display = 'block';
                     document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
@@ -374,6 +502,7 @@
                     // Clear form
                     e.target.reset();
                     document.getElementById('skillsContainer').innerHTML = ''; // Clear skills
+                    toggleBountyInput(); // Reset toggle UI
 
                     // Redirect to dashboard after 2 seconds based on role
                     setTimeout(() => {

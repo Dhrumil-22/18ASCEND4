@@ -168,7 +168,7 @@
                             <h2 class="section-title">Quick Actions</h2>
                         </div>
                         <div class="quick-actions-grid">
-                            <div class="action-card" onclick="window.location.href='mentees.html'">
+                            <div class="action-card" onclick="window.location.href='mentor-messages.html'">
                                 <i data-lucide="message-square" width="24" height="24"></i>
                                 <div style="font-weight: 500; font-size: 0.9rem;">Message Mentees</div>
                             </div>
@@ -176,16 +176,27 @@
                                 <i data-lucide="plus-circle" width="24" height="24"></i>
                                 <div style="font-weight: 500; font-size: 0.9rem;">New Roadmap</div>
                             </div>
-                            <div class="action-card" onclick="window.location.href='My-Mentor.html'">
-                                <i data-lucide="zap" width="24" height="24"></i>
-                                <div style="font-weight: 500; font-size: 0.9rem;">Ask Question</div>
-                            </div>
+                        </div>
+
+                        <!-- Urgent Questions -->
+                        <div class="section-header">
+                            <h2 class="section-title">Urgent Student Questions <span
+                                    style="font-size: 0.8em; color: #FFD700; font-weight: normal; margin-left: 0.5rem;"><i
+                                        data-lucide="zap"
+                                        style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
+                                    High Priority</span></h2>
+                        </div>
+                        <div class="card" id="urgentQuestionsContainer"
+                            style="margin-bottom: 2rem; border-left: 4px solid #FFD700;">
+                            <p
+                                style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
+                                Loading urgent questions...</p>
                         </div>
 
                         <!-- Recent Questions (Unanswered) -->
                         <div class="section-header">
                             <h2 class="section-title">Unanswered Student Questions</h2>
-                            <a href="My-Mentor.html" class="btn-link">View All</a>
+                            <a href="mentor-messages.html" class="btn-link">View All</a>
                         </div>
                         <div class="card" id="questionsContainer" style="margin-bottom: 2rem;">
                             <p
@@ -196,53 +207,16 @@
 
                     <div class="dashboard-side-col">
                         <div class="section-header">
-                            <h2 class="section-title">Recent Activity</h2>
+                            <h2 class="section-title">Recent Messages</h2>
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                <div class="activity-feed">
-                                    <div class="activity-item">
-                                        <div class="activity-dot"></div>
-                                        <div>
-                                            <div
-                                                style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary);">
-                                                New Request</div>
-                                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Sarah Miller
-                                                sent a mentorship request</div>
-                                            <div
-                                                style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.25rem;">
-                                                2 hours ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="activity-item">
-                                        <div class="activity-dot" style="background: var(--success-color);"></div>
-                                        <div>
-                                            <div
-                                                style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary);">
-                                                Roadmap Completed</div>
-                                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Alex Chen
-                                                finished the PM Basics roadmap</div>
-                                            <div
-                                                style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.25rem;">
-                                                5 hours ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="activity-item">
-                                        <div class="activity-dot" style="background: var(--warning-color);"></div>
-                                        <div>
-                                            <div
-                                                style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary);">
-                                                Mentee Milestone</div>
-                                            <div style="font-size: 0.8rem; color: var(--text-secondary);">James Wilson
-                                                updated his career goal</div>
-                                            <div
-                                                style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.25rem;">
-                                                Yesterday</div>
-                                        </div>
-                                    </div>
+                                <div class="activity-feed" id="recentMessagesFeed">
+                                    <p style="text-align: center; color: var(--text-secondary); padding: 1rem;">Loading
+                                        messages...</p>
                                 </div>
-                                <button class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 1.5rem;">View
-                                    Full Log</button>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 1.5rem;"
+                                    onclick="window.location.href='mentor-messages.html'">View All Messages</button>
                             </div>
                         </div>
                     </div>
@@ -255,8 +229,88 @@
         </div>
     </main>
 
+    <!-- Answer Modal -->
+    <div id="answerModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; border: 1px solid rgba(255,255,255,0.1);">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Answer Question</h2>
+            <div id="modalQuestionContent"
+                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">
+                Loading question...
+            </div>
+            <form id="answerForm">
+                <input type="hidden" id="modalQuestionId">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-primary);">Your
+                        Answer</label>
+                    <textarea id="answerContent"
+                        style="width: 100%; min-height: 150px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 1rem; border-radius: 8px;"
+                        placeholder="Write your helpful response here..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAnswerModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Answer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/navigation.js"></script>
     <script>
+
+        // Modal Functions
+        const modal = document.getElementById('answerModal');
+        const answerForm = document.getElementById('answerForm');
+
+        function openAnswerModal(questionId, questionContent) {
+            document.getElementById('modalQuestionId').value = questionId;
+            document.getElementById('modalQuestionContent').textContent = questionContent;
+            modal.style.display = 'flex';
+        }
+
+        function closeAnswerModal() {
+            modal.style.display = 'none';
+            answerForm.reset();
+        }
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeAnswerModal();
+        });
+
+        // Handle Answer Submission
+        answerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const questionId = document.getElementById('modalQuestionId').value;
+            const content = document.getElementById('answerContent').value;
+            const token = localStorage.getItem('auth_token');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/api/questions/${questionId}/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ content })
+                });
+
+                if (response.ok) {
+                    alert('Answer submitted successfully!');
+                    closeAnswerModal();
+                    // Refresh dashboard data
+                    location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to submit answer');
+                }
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
         // Initialize Lucide icons
         lucide.createIcons();
 
@@ -328,13 +382,46 @@
                     document.getElementById('statRequests').textContent = data.stats.requests;
                     document.getElementById('statConnections').textContent = data.stats.mentees;
 
-                    // Render Questions
+                    // Render Urgent Questions
+                    const urgentContainer = document.getElementById('urgentQuestionsContainer');
+                    urgentContainer.innerHTML = '';
+                    if (!data.urgent_questions || data.urgent_questions.length === 0) {
+                        urgentContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No urgent questions at the moment.</p>';
+                    } else {
+                        data.urgent_questions.forEach(q => {
+                            // Escape single quotes for the function call
+                            const safeContent = q.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                            const html = `
+                                <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; background: rgba(255, 215, 0, 0.05);">
+                                    <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid #FFD700; color: #FFD700;">${q.author_initials}</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: #FFD700;">
+                                            <i data-lucide="zap" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> 
+                                            ${q.title}
+                                            <span style="font-size: 0.75rem; background: #FFD700; color: #000; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${q.bounty} pts</span>
+                                        </div>
+                                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content}</div>
+                                        <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary);">
+                                            <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author}</span>
+                                            <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm" style="background: #FFD700; color: #000; border: none;" onclick="openAnswerModal(${q.id}, '${safeContent}')">Answer Now</button>
+                                </div>
+                            `;
+                            urgentContainer.insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+
+                    // Render Questions (Unanswered in main column)
                     const questionsContainer = document.getElementById('questionsContainer');
                     questionsContainer.innerHTML = '';
                     if (!data.questions || data.questions.length === 0) {
                         questionsContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No new unanswered questions.</p>';
                     } else {
                         data.questions.forEach(q => {
+                            // Escape single quotes for the function call
+                            const safeContent = q.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
                             const html = `
                                 <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start;">
                                     <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">${q.author_initials}</div>
@@ -346,14 +433,39 @@
                                             <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary btn-sm" onclick="window.location.href='question-detail.html?id=${q.id}'">Answer</button>
+                                    <button class="btn btn-primary btn-sm" onclick="openAnswerModal(${q.id}, '${safeContent}')">Answer</button>
                                 </div>
                             `;
                             questionsContainer.insertAdjacentHTML('beforeend', html);
                         });
-                        // Re-init icons for new content
-                        lucide.createIcons();
                     }
+
+                    // Render Recent Messages (Side Column) - Reusing questions data for now as per request
+                    const recentMessagesFeed = document.getElementById('recentMessagesFeed');
+                    recentMessagesFeed.innerHTML = '';
+                    const recentMessages = data.questions ? data.questions.slice(0, 3) : []; // Show simplified view of same questions
+
+                    if (recentMessages.length === 0) {
+                        recentMessagesFeed.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No recent messages.</p>';
+                    } else {
+                        recentMessages.forEach(q => {
+                            const html = `
+                                <div class="activity-item">
+                                    <div class="activity-dot"></div>
+                                    <div>
+                                        <div style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary);">${q.author}</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${q.title}</div>
+                                        <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.25rem;">${q.time}</div>
+                                    </div>
+                                </div>
+                            `;
+                            recentMessagesFeed.insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+
+                    // Re-init icons for new content
+                    lucide.createIcons();
+
                 } else {
                     console.error('Failed to load dashboard data');
                     if (response.status === 401 || response.status === 403) {

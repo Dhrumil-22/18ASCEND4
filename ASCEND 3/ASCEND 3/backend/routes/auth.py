@@ -52,7 +52,8 @@ def login():
             'id': user.id,
             'username': user.username,
             'email': user.email,
-            'role': user.role
+            'role': user.role,
+            'points': user.points
         }
     }), 200
 
@@ -71,7 +72,8 @@ def status():
                 'id': current_user.id,
                 'username': current_user.username,
                 'email': current_user.email,
-                'role': current_user.role
+                'role': current_user.role,
+                'points': current_user.points
             }
         })
     return jsonify({'authenticated': False})

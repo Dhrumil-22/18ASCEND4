@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String(20), default='student') # 'student', 'alumni', 'admin'
     is_verified = db.Column(db.Boolean, default=False) # For mentors
+    points = db.Column(db.Integer, default=100) # Gamification points
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -72,6 +73,8 @@ class Question(db.Model):
     title = db.Column(db.String(256), nullable=False)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    is_urgent = db.Column(db.Boolean, default=False)
+    bounty = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
