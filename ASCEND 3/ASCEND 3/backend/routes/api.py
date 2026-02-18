@@ -452,6 +452,7 @@ def create_roadmap():
     data = request.get_json()
     title = data.get('title')
     description = data.get('description')
+    steps = data.get('steps') # Expecting JSON string or object
     
     if not title or not description:
         return jsonify({'error': 'Title and description are required'}), 400
@@ -459,6 +460,7 @@ def create_roadmap():
     roadmap = Roadmap(
         title=title,
         description=description,
+        steps=str(steps) if steps else None, # Store as string
         creator_id=current_user.id
     )
     db.session.add(roadmap)

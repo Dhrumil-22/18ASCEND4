@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Questions - ASCEND (Mentor)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+    <style>
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-btn.urgent-tab.active {
+            color: #FFD700;
+            border-bottom-color: #FFD700;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar-placeholder" data-src="mentor-sidebar.html"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="dashboard-nav-group">
+            <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="mentor-all-questions.html" class="sidebar-nav-item active">
+                <i data-lucide="message-square" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Questions</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
+        </div>
+
+        <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
+            <div class="header-user-info">
+                <div class="header-user-name">Mentor Name</div>
+                <div class="header-user-role">Mentor</div>
+            </div>
+            <div class="avatar avatar-md">ME</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+        <div class="page-container">
+            <div class="main-content">
+                <div class="page-header">
+                    <h1 class="page-title">All Student Questions</h1>
+                    <p class="text-secondary">View and help students by answering their questions.</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn urgent-tab active" onclick="switchTab('urgent')">
+                        <i data-lucide="zap"
+                            style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                        Urgent Questions
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('general')">General Questions</button>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <input type="text" id="searchQuestion" class="search-input" placeholder="Search questions...">
+                </div>
+
+                <!-- Questions List -->
+                <div class="card">
+                    <div id="questionsContainer">
+                        <p
+                            style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
+                            Loading questions...</p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        let allQuestions = [];
+        let currentTab = 'urgent';
+
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // Update UI
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (tab === 'urgent') {
+                document.querySelector('.tab-btn.urgent-tab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            }
+
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            const searchTerm = document.getElementById('searchQuestion').value.toLowerCase();
+
+            // Filter by tab and search
+            let filtered = allQuestions.filter(q => {
+                const matchesSearch = q.title.toLowerCase().includes(searchTerm) || q.content.toLowerCase().includes(searchTerm);
+                if (!matchesSearch) return false;
+
+                if (currentTab === 'urgent') {
+                    return q.is_urgent;
+                } else {
+                    return !q.is_urgent;
+                }
+            });
+
+            container.innerHTML = '';
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
+                        No ${currentTab} questions found.
+                    </p>`;
+                return;
+            }
+
+            filtered.forEach(q => {
+                const urgentBadge = q.is_urgent ?
+                    `<span style="background: rgba(255, 215, 0, 0.1); color: #FFD700; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; border: 1px solid rgba(255, 215, 0, 0.3); margin-left: 0.5rem; display: inline-flex; align-items: center; gap: 4px;">
+                        <i data-lucide="zap" style="width: 10px; height: 10px;"></i> ${q.bounty} pts
+                    </span>` : '';
+
+                const cardStyle = q.is_urgent ? 'background: rgba(255, 215, 0, 0.05);' : '';
+                const avatarStyle = q.is_urgent ? 'border: 1px solid #FFD700; color: #FFD700;' : 'border: 1px solid var(--border-color);';
+
+                const html = `
+                    <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; ${cardStyle}">
+                        <div class="avatar avatar-md" style="background-color: var(--card-bg); ${avatarStyle}">${q.author_initials}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500; font-size: 1rem; margin-bottom: 0.25rem;">
+                                ${q.title}
+                                ${urgentBadge}
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content}</div>
+                            <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary);">
+                                <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author}</span>
+                                <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="window.location.href='mentor-question-detail.html?id=${q.id}'">Answer</button>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+            lucide.createIcons();
+        }
+
+        async function fetchQuestions() {
+            const token = localStorage.getItem('auth_token');
+            const container = document.getElementById('questionsContainer');
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/mentor/questions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    allQuestions = await response.json();
+                    renderQuestions();
+                } else {
+                    console.error('Failed to fetch questions');
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = 'login.html';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+                container.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--error-color);">Error loading questions.</p>';
+            }
+        }
+
+        // Fetch Data
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('auth_token');
+            const userStr = localStorage.getItem('user');
+
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let user = null;
+            if (userStr) {
+                try {
+                    user = JSON.parse(userStr);
+                    const displayName = user.name || user.username || 'Mentor';
+                    document.querySelector('.header-user-name').textContent = displayName;
+                    document.querySelector('.header-user .avatar').textContent = displayName.substring(0, 2).toUpperCase();
+                } catch (e) { }
+            }
+
+            await fetchQuestions();
+
+            // Search functionality
+            document.getElementById('searchQuestion').addEventListener('input', renderQuestions);
+        });
+    </script>
+</body>
+
+</html>
