@@ -42,12 +42,18 @@
             </a>
         </div>
 
-        <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
-            <div class="header-user-info">
-                <div class="header-user-name">Mentor Name</div>
-                <div class="header-user-role">Mentor</div>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <button onclick="window.location.href='mentor-messages.html'"
+                style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
+                <div class="header-user-info">
+                    <div class="header-user-name">Mentor Name</div>
+                    <div class="header-user-role">Mentor</div>
+                </div>
+                <div class="avatar avatar-md">ME</div>
             </div>
-            <div class="avatar avatar-md">ME</div>
         </div>
     </header>
 
@@ -74,7 +80,37 @@
                                 <textarea class="input" id="roadmapDesc" rows="3"
                                     placeholder="Describe what this roadmap covers..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Create Roadmap</button>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="input-group">
+                                    <label class="input-label">Difficulty Level</label>
+                                    <select class="input" id="roadmapLevel">
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Intermediate">Intermediate</option>
+                                        <option value="Advanced">Advanced</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Duration</label>
+                                    <input type="text" class="input" id="roadmapDuration" placeholder="e.g. 4 Weeks"
+                                        required>
+                                </div>
+                            </div>
+
+                            <label class="input-label" style="margin-bottom: 0.5rem; display: block;">Roadmap
+                                Modules</label>
+                            <div id="stepsContainer" style="margin-bottom: 1rem;">
+                                <!-- Dynamic Steps will appear here -->
+                            </div>
+
+                            <button type="button" class="btn btn-secondary btn-sm" id="addStepBtn"
+                                style="margin-bottom: 1.5rem;">
+                                <i data-lucide="plus"
+                                    style="width: 16px; height: 16px; margin-right: 0.5rem; display: inline-block; vertical-align: middle;"></i>
+                                Add Module
+                            </button>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Roadmap</button>
                         </form>
                     </div>
                 </div>
@@ -94,10 +130,39 @@
     <script>
         lucide.createIcons();
 
-
-
         const token = localStorage.getItem('auth_token');
         if (!token) window.location.href = 'login.html';
+
+        // Steps Handling
+        const stepsContainer = document.getElementById('stepsContainer');
+        const addStepBtn = document.getElementById('addStepBtn');
+
+        function addStepInput() {
+            const stepId = Date.now();
+            const html = `
+                <div class="step-card" id="step-${stepId}" style="background: var(--bg-color); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <h4 style="font-size: 0.9rem; font-weight: 600;">Module Details</h4>
+                        <button type="button" class="text-danger" style="background: none; border: none; font-size: 0.8rem; cursor: pointer; color: #ff6b6b;" onclick="removeStep('${stepId}')">Remove</button>
+                    </div>
+                    <input type="text" class="input step-title" placeholder="Module Title (e.g. Intro to Python)" style="margin-bottom: 0.5rem;" required>
+                    <textarea class="input step-content" rows="2" placeholder="Brief description of what to learn..." style="margin-bottom: 0.5rem;" required></textarea>
+                    <input type="text" class="input step-link" placeholder="Resource Link (Optional)">
+                </div>
+            `;
+            stepsContainer.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeStep(id) {
+            document.getElementById(`step-${id}`).remove();
+        }
+
+        // Expose removeStep globally
+        window.removeStep = removeStep;
+
+        addStepBtn.addEventListener('click', addStepInput);
+        // Add one initial step
+        addStepInput();
 
         async function loadRoadmaps() {
             // Update Header User Info
@@ -106,24 +171,14 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (profileRes.ok) {
-                    const profileData = await profileRes.json();
-                    const nameToDisplay = profileData.full_name || 'Mentor';
-
-                    const headerName = document.querySelector('.header-user-name');
-                    if (headerName) headerName.textContent = nameToDisplay;
-
-                    const headerAvatar = document.querySelector('.header-user .avatar');
-                    if (headerAvatar) {
-                        headerAvatar.textContent = nameToDisplay.substring(0, 2).toUpperCase();
-                    }
+                    const d = await profileRes.json();
+                    const nameToDisplay = d.full_name || 'Mentor';
+                    document.querySelector('.header-user-name').textContent = nameToDisplay;
+                    document.querySelector('.header-user .avatar').textContent = nameToDisplay.substring(0, 2).toUpperCase();
                 }
-            } catch (e) {
-                console.error("Failed to fetch profile for header:", e);
-            }
+            } catch (e) { }
 
             try {
-                // Using existing endpoint - might need filtering by creator in UI or API later if strictly 'my' roadmaps
-                // For now showing all is acceptable or filtering client side
                 const response = await fetch('http://127.0.0.1:5000/api/career/roadmaps', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -134,22 +189,47 @@
                 if (data.length === 0) {
                     container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">No roadmaps found.</p>';
                 } else {
-                    // Filter to match current user if possible? 
-                    // API returns 'creator' name, tricky to match exactly without ID. 
-                    // Let's just show all for now as "Community Roadmaps" or similar
-
                     data.forEach(r => {
+                        let details = {};
+                        try {
+                            if (r.steps) {
+                                // Handle potential double encoding or direct usage
+                                let stepsStr = r.steps;
+                                // If it's single quoted from python string representation, replace with double quotes for JSON
+                                if (stepsStr.startsWith("{'")) {
+                                    stepsStr = stepsStr.replace(/'/g, '"');
+                                }
+                                details = (typeof stepsStr === 'string') ? JSON.parse(stepsStr) : stepsStr;
+                                if (typeof details === 'string') details = {};
+                            }
+                        } catch (e) { console.log('Error parsing steps', e); }
+
+                        const level = details.level || 'General';
+                        const duration = details.duration || 'Flexible';
+                        const moduleCount = details.modules ? details.modules.length : 0;
+
                         const html = `
                             <div class="card">
                                 <div class="card-body">
-                                    <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${r.title}</h3>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                        <h3 style="font-size: 1.1rem; font-weight: 600;">${r.title}</h3>
+                                        <span class="badge badge-primary">${level}</span>
+                                    </div>
                                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">${r.description}</p>
-                                    <div style="font-size: 0.85rem; color: var(--text-tertiary);">Created by ${r.creator}</div>
+                                    
+                                    <div style="display: flex; gap: 1.5rem; font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 1rem;">
+                                        <span><i data-lucide="clock" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> ${duration}</span>
+                                        <span><i data-lucide="layers" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> ${moduleCount} Modules</span>
+                                        <span><i data-lucide="user" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> ${r.creator || 'Me'}</span>
+                                    </div>
+
+                                    <button class="btn btn-secondary btn-sm" onclick="window.location.href='roadmap-detail.html?id=${r.id}'">View Details</button>
                                 </div>
                             </div>
                         `;
                         container.insertAdjacentHTML('beforeend', html);
                     });
+                    lucide.createIcons();
                 }
             } catch (error) {
                 console.error('Error loading roadmaps:', error);
@@ -160,6 +240,25 @@
             e.preventDefault();
             const title = document.getElementById('roadmapTitle').value;
             const desc = document.getElementById('roadmapDesc').value;
+            const level = document.getElementById('roadmapLevel').value;
+            const duration = document.getElementById('roadmapDuration').value;
+
+            // Collect Steps
+            const stepCards = document.querySelectorAll('.step-card');
+            const modules = [];
+            stepCards.forEach(card => {
+                modules.push({
+                    title: card.querySelector('.step-title').value,
+                    content: card.querySelector('.step-content').value,
+                    link: card.querySelector('.step-link').value
+                });
+            });
+
+            const stepsData = {
+                level: level,
+                duration: duration,
+                modules: modules
+            };
 
             try {
                 const response = await fetch('http://127.0.0.1:5000/api/roadmaps', {
@@ -168,18 +267,26 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ title, description: desc })
+                    body: JSON.stringify({
+                        title,
+                        description: desc,
+                        steps: JSON.stringify(stepsData) // Send as JSON string to match backend expectation
+                    })
                 });
 
                 if (response.ok) {
-                    alert('Roadmap created!');
+                    alert('Roadmap created successfully!');
                     document.getElementById('createRoadmapForm').reset();
+                    document.getElementById('stepsContainer').innerHTML = '';
+                    addStepInput(); // Reset to one empty step
                     loadRoadmaps();
                 } else {
-                    alert('Failed to create roadmap');
+                    const err = await response.json();
+                    alert(err.error || 'Failed to create roadmap');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred.');
             }
         });
 

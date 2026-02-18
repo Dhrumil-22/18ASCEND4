@@ -110,12 +110,18 @@
             </a>
         </div>
 
-        <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
-            <div class="header-user-info">
-                <div class="header-user-name">Mentor Name</div>
-                <div class="header-user-role">Mentor</div>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <button onclick="window.location.href='mentor-messages.html'"
+                style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
+                <div class="header-user-info">
+                    <div class="header-user-name">Mentor Name</div>
+                    <div class="header-user-role">Mentor</div>
+                </div>
+                <div class="avatar avatar-md">ME</div>
             </div>
-            <div class="avatar avatar-md">ME</div>
         </div>
     </header>
 
@@ -168,7 +174,7 @@
                             <h2 class="section-title">Quick Actions</h2>
                         </div>
                         <div class="quick-actions-grid">
-                            <div class="action-card" onclick="window.location.href='mentor-messages.html'">
+                            <div class="action-card" onclick="window.location.href='mentor-mentees.html'">
                                 <i data-lucide="message-square" width="24" height="24"></i>
                                 <div style="font-weight: 500; font-size: 0.9rem;">Message Mentees</div>
                             </div>
