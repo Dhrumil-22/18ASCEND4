@@ -274,32 +274,69 @@
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="header" style="justify-content: space-between; padding: 0 2rem; width: 100%;left: 0;">
-        <div class="header-logo" style="display: flex; align-items: center; gap: 10px;">
-            <div
-                style="width: 40px; height: 40px; background: rgba(77, 163, 255, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                <i data-lucide="zap" style="width: 24px; height: 24px; fill: #4DA3FF; color: #4DA3FF;"></i>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
             </div>
-            <div style="font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 1px;">
-                ASCEND</div>
+            <div class="sidebar-logo-text">ASCEND</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="mentor-all-questions.html" class="sidebar-nav-item">
+                <i data-lucide="help-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>All Questions</span>
+            </a>
+            <a href="mentees.html" class="sidebar-nav-item">
+                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>My Mentees</span>
+            </a>
+            <a href="mentor-messages.html" class="sidebar-nav-item active">
+                <i data-lucide="message-square" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Messages</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-nav-item" id="collapseBtn">
+                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Collapse</span>
+            </div>
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="dashboard-nav-group">
+            <a href="mentor-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
         </div>
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <div class="dashboard-nav-group">
-                <a href="mentor-dashboard.html" class="sidebar-nav-item">
-                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="contact.html" class="sidebar-nav-item ">
-                    <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                    <span>Contact Us</span>
-                </a>
-                <a href="about.html" class="sidebar-nav-item ">
-                    <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                    <span>About Us</span>
-                </a>
-            </div>
+            <button onclick="window.location.href='mentor-messages.html'"
+                style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+            </button>
             <div class="header-user" onclick="window.location.href='mentor-profile.html'" style="cursor: pointer;">
                 <div class="header-user-info">
                     <div class="header-user-name" id="header-user-name">Loading...</div>
@@ -311,7 +348,7 @@
     </header>
 
     <!-- Main Content -->
-    <main style="padding-top: 80px; height: 100vh; overflow: hidden; width: 100%;">
+    <main class="main-layout" style="padding-top: 80px; height: 100vh; overflow: hidden; width: auto;">
         <div class="page-container" style="height: 100%; padding-bottom: 0;">
 
             <div class="chat-container">

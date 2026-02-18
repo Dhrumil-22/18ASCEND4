@@ -685,6 +685,10 @@ def get_messages(partner_id):
         )
     ).order_by(Message.created_at.asc()).all()
     
+    # Mark messages from partner as read
+    Message.query.filter_by(sender_id=partner_id, recipient_id=current_user.id, is_read=False).update({'is_read': True})
+    db.session.commit()
+    
     msgs_data = []
     for m in messages:
         msgs_data.append({
@@ -727,3 +731,8 @@ def send_message():
             'is_me': True
         }
     }), 201
+@api.route('/messages/unread_count', methods=['GET'])
+@login_required
+def get_unread_count():
+    count = Message.query.filter_by(recipient_id=current_user.id, is_read=False).count()
+    return jsonify({'unread_count': count})

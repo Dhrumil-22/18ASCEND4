@@ -18,25 +18,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Role-based Logo Redirection
     window.updateLogoLinks = function () {
         const user = JSON.parse(localStorage.getItem('user'));
-        const role = user ? user.role : 'student'; // Default to student if role not found, or handle as guest
+        const role = user ? user.role : 'student';
 
-        // Select all logo elements (header and sidebar)
-        const logos = document.querySelectorAll('.nav-logo, .sidebar-logo');
+        // Select logo elements
+        const logos = document.querySelectorAll('.nav-logo, .sidebar-logo, .header-logo');
 
         logos.forEach(logo => {
-            if (role === 'admin') {
-                logo.setAttribute('href', 'admin-dashboard.html');
-            } else if (role === 'mentor' || role === 'alumni') {
-                logo.setAttribute('href', 'mentor-dashboard.html');
-            } else if (role === 'student') {
-                logo.setAttribute('href', 'dashboard.html');
+            // Set cursor pointer
+            logo.style.cursor = 'pointer';
+
+            // Add click listener if not already an <a>
+            if (logo.tagName !== 'A') {
+                logo.onclick = () => {
+                    if (role === 'admin') window.location.href = 'admin-dashboard.html';
+                    else if (role === 'mentor' || role === 'alumni') window.location.href = 'mentor-dashboard.html';
+                    else window.location.href = 'dashboard.html';
+                };
             } else {
-                logo.setAttribute('href', 'index.html');
+                // Update href for <a> tags
+                if (role === 'admin') logo.setAttribute('href', 'admin-dashboard.html');
+                else if (role === 'mentor' || role === 'alumni') logo.setAttribute('href', 'mentor-dashboard.html');
+                else logo.setAttribute('href', 'dashboard.html');
             }
         });
     };
 
-    // Initial call
     window.updateLogoLinks();
 
     // Update Profile Link (if needed, though student-profile.html is shared but might need role-specific view later)
@@ -151,19 +157,50 @@ document.addEventListener('DOMContentLoaded', function () {
             link.style.color = 'var(--primary)';
         }
     });
-});
 
-// Page transition animation
-window.addEventListener('beforeunload', function () {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.2s ease-out';
-});
+    // Unread Messages Indicator
+    async function checkUnreadMessages() {
+        const token = localStorage.getItem('auth_token');
+        if (!token) return;
 
-// Fade in on page load
-window.addEventListener('load', function () {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.3s ease-in';
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 10);
+        try {
+            const res = await fetch('http://127.0.0.1:5000/api/messages/unread_count', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const msgBtns = document.querySelectorAll('button[onclick*="student-messages.html"], button[onclick*="mentor-messages.html"]');
+
+                msgBtns.forEach(btn => {
+                    // Check if dot already exists
+                    let dot = btn.querySelector('.unread-dot');
+                    if (data.unread_count > 0) {
+                        if (!dot) {
+                            dot = document.createElement('span');
+                            dot.className = 'unread-dot';
+                            dot.style.cssText = `
+                                position: absolute;
+                                top: 5px;
+                                right: 5px;
+                                width: 8px;
+                                height: 8px;
+                                background: #ff4d4f;
+                                border-radius: 50%;
+                                border: 2px solid var(--bg-card);
+                            `;
+                            btn.style.position = 'relative';
+                            btn.appendChild(dot);
+                        }
+                    } else if (dot) {
+                        dot.remove();
+                    }
+                });
+            }
+        } catch (e) { console.error("Unread check failed", e); }
+    }
+
+    // Initial check and poll every 30s
+    checkUnreadMessages();
+    setInterval(checkUnreadMessages, 30000);
 });
