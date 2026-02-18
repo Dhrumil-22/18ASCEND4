@@ -206,7 +206,7 @@
                                     High Priority</span></h2>
                         </div>
                         <div class="card" id="urgentQuestionsContainer"
-                            style="margin-bottom: 2rem; border-left: 4px solid #FFD700;">
+                            style="margin-bottom: 2rem; border-left: 4px solid #FFD700; max-height: 300px; overflow-y: auto;">
                             <p
                                 style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
                                 Loading urgent questions...</p>
@@ -217,7 +217,8 @@
                             <h2 class="section-title">Unanswered Student Questions</h2>
                             <a href="mentor-all-questions.html" class="btn-link">View All</a>
                         </div>
-                        <div class="card" id="questionsContainer" style="margin-bottom: 2rem;">
+                        <div class="card" id="questionsContainer"
+                            style="margin-bottom: 2rem; max-height: 300px; overflow-y: auto;">
                             <p
                                 style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
                                 Loading questions...</p>
@@ -464,13 +465,23 @@
                     const urgentQuestions = allQuestions.filter(q => q.is_urgent);
                     const generalQuestions = allQuestions.filter(q => !q.is_urgent);
 
-                    // Render Urgent Questions (Top 5)
+                    // Sort by bounty (descending) - same logic as all-questions page
+                    const sortByBounty = (a, b) => {
+                        const bountyA = parseInt(a.bounty) || 0;
+                        const bountyB = parseInt(b.bounty) || 0;
+                        return bountyB - bountyA;
+                    };
+
+                    urgentQuestions.sort(sortByBounty);
+                    generalQuestions.sort(sortByBounty);
+
+                    // Render Urgent Questions (Scrollable, no limit)
                     const urgentContainer = document.getElementById('urgentQuestionsContainer');
                     urgentContainer.innerHTML = '';
                     if (urgentQuestions.length === 0) {
                         urgentContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No urgent questions at the moment.</p>';
                     } else {
-                        urgentQuestions.slice(0, 5).forEach(q => {
+                        urgentQuestions.forEach(q => {
                             const html = `
                                 <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; transition: background 0.2s;">
                                     <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid #FFD700; color: #FFD700;">${q.author_initials || '??'}</div>
@@ -493,13 +504,13 @@
                         });
                     }
 
-                    // Render Requests/General Questions (Top 5)
+                    // Render Requests/General Questions (Scrollable, no limit)
                     const questionsContainer = document.getElementById('questionsContainer');
                     questionsContainer.innerHTML = '';
                     if (generalQuestions.length === 0) {
                         questionsContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No new unanswered questions.</p>';
                     } else {
-                        generalQuestions.slice(0, 5).forEach(q => {
+                        generalQuestions.forEach(q => {
                             const html = `
                                 <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start;">
                                     <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">${q.author_initials || '??'}</div>

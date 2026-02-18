@@ -87,10 +87,14 @@ def get_dashboard():
     
     # Stats
     question_count = current_user.questions.count()
-    thread_count = current_user.threads.count()
-    # Mocking 'Mentor Responses' and 'Roadmaps Saved' for now as models might not support tracking yet
-    mentor_responses = 0 
-    roadmaps_saved = 0
+    
+    # Calculate Mentor Responses: specific replies to the user's questions
+    # Identifying replies where the question author is the current user
+    # We can query Reply joined with Question
+    mentor_responses = Reply.query.join(Question).filter(Question.user_id == current_user.id).count()
+    
+    # Connections: Accepted mentorship requests
+    connections = MentorshipRequest.query.filter_by(student_id=current_user.id, status='accepted').count()
     
     # Recommended Mentors (Logic: Users with role 'alumni' or 'mentor')
     # In a real app, this would use matching algorithms based on skills/goals
@@ -130,12 +134,47 @@ def get_dashboard():
         'stats': {
             'questions': question_count,
             'responses': mentor_responses,
-            'roadmaps': roadmaps_saved
+            'connections': connections
         },
         'current_goal': current_user.profile_info.current_goal if current_user.profile_info else "Set a goal!",
         'mentors': mentors_data,
         'activity': activity_feed
     })
+
+@api.route('/student/questions', methods=['GET'])
+@login_required
+def get_student_questions():
+    questions = Question.query.filter_by(user_id=current_user.id).order_by(Question.created_at.desc()).all()
+    output = []
+    for q in questions:
+        output.append({
+            'id': q.id,
+            'title': q.title,
+            'content': q.content,
+            'is_urgent': q.is_urgent,
+            'bounty': q.bounty,
+            'created_at': q.created_at.strftime("%Y-%m-%d"),
+            'reply_count': q.replies.count()
+        })
+    return jsonify(output)
+
+@api.route('/student/responses', methods=['GET'])
+@login_required
+def get_student_responses():
+    # Fetch replies to questions authored by current_user
+    responses = Reply.query.join(Question).filter(Question.user_id == current_user.id).order_by(Reply.created_at.desc()).all()
+    output = []
+    for r in responses:
+        author_name = r.author.profile_info.full_name if r.author.profile_info and r.author.profile_info.full_name else r.author.username
+        output.append({
+            'id': r.id,
+            'content': r.content,
+            'question_title': r.question.title,
+            'question_id': r.question.id,
+            'mentor_name': author_name,
+            'created_at': r.created_at.strftime("%Y-%m-%d")
+        })
+    return jsonify(output)
 
 @api.route('/mentors', methods=['GET'])
 @login_required

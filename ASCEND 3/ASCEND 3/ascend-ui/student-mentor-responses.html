@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Responses - ASCEND</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/header-style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/include-components.js"></script>
+    <style>
+        /* Custom Dashboard Header Styles */
+        .header {
+            justify-content: flex-end;
+            position: fixed;
+            /* Ensure context */
+        }
+
+        .dashboard-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* Decreased padding between buttons */
+            position: absolute;
+            left: 45%;
+            transform: translateX(-50%);
+        }
+
+        /* Ensure nav items inside the group behave correctly */
+        .dashboard-nav-group .sidebar-nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important;
+            /* Override global sidebar active styles */
+            border: none !important;
+            margin: 0 !important;
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            /* Hover animation */
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:active {
+            transform: scale(0.95);
+            /* Click animation */
+        }
+
+        .dashboard-nav-group .sidebar-nav-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
+            </div>
+            <div class="sidebar-logo-text">ASCEND</div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="ask-question.html" class="sidebar-nav-item">
+                <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Ask Questions</span>
+            </a>
+            <a href="mentees.html" class="sidebar-nav-item">
+                <i data-lucide="user-check" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+
+                <span>My Mentors</span>
+            </a>
+            <a href="career-exploration.html" class="sidebar-nav-item">
+                <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>RoadMaps</span>
+            </a>
+            <a href="My-Mentor.html" class="sidebar-nav-item">
+                <i data-lucide="graduation-cap" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>All Mentors</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-nav-item" id="collapseBtn">
+                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Collapse</span>
+            </div>
+
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="dashboard-nav-group">
+            <a href="dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
+            <div class="sidebar-nav-item"
+                style="cursor: default; border: 1px solid rgba(255, 215, 0, 0.2); background: rgba(255, 215, 0, 0.05) !important;">
+                <i data-lucide="star"
+                    style="width: 18px; height: 18px; stroke-width: 2; color: #FFD700; fill: rgba(255, 215, 0, 0.5);"></i>
+                <span style="color: #FFD700; font-weight: 600;" id="headerPoints">...</span>
+                <span style="font-size: 0.75em; margin-left: 4px; color: var(--text-tertiary);">PTS</span>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <button onclick="window.location.href='student-messages.html'"
+                style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+            </button>
+
+            <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+                <div class="header-user-info">
+                    <div class="header-user-name">Loading...</div>
+                    <div class="header-user-role">Student</div>
+                </div>
+                <div class="avatar avatar-md"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+        <div class="page-container">
+            <div class="main-content">
+                <div class="page-header">
+                    <h1 class="page-title">Mentor Responses</h1>
+                    <p class="text-secondary">View helpful answers from mentors.</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <input type="text" id="searchResponse" class="search-input" placeholder="Search responses...">
+                </div>
+
+                <!-- Responses List -->
+                <div class="card">
+                    <div id="responsesContainer">
+                        <p
+                            style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
+                            Loading responses...</p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Footer -->
+            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        let allResponses = [];
+
+        async function fetchHeaderData() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            try {
+                // Reuse dashboard API for points/name
+                const response = await fetch('http://127.0.0.1:5000/api/dashboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update Header User Profile
+                    const headerName = document.querySelector('.header-user-name');
+                    if (headerName) headerName.textContent = data.user_name;
+
+                    // Update Points
+                    const headerPoints = document.getElementById('headerPoints');
+                    if (headerPoints && data.points !== undefined) headerPoints.textContent = data.points;
+
+                    const headerAvatar = document.querySelector('.header-user .avatar');
+                    if (headerAvatar && data.user_name) {
+                        const parts = data.user_name.trim().split(' ');
+                        let initials = parts[0][0];
+                        if (parts.length > 1) {
+                            initials += parts[1][0];
+                        }
+                        headerAvatar.textContent = initials.toUpperCase();
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching header data:", error);
+            }
+        }
+
+
+        function renderResponses() {
+            const container = document.getElementById('responsesContainer');
+            const searchTerm = document.getElementById('searchResponse') ? document.getElementById('searchResponse').value.toLowerCase() : '';
+
+            // Filter by search
+            let filtered = allResponses.filter(r => {
+                return (r.content && r.content.toLowerCase().includes(searchTerm)) || (r.question_title && r.question_title.toLowerCase().includes(searchTerm));
+            });
+
+            container.innerHTML = '';
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">
+                        No responses found.
+                    </p>`;
+                return;
+            }
+
+            filtered.forEach(r => {
+                const html = `
+                    <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start;">
+                        <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">${r.mentor_name.substring(0, 2).toUpperCase()}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; color: var(--primary);">
+                                <i data-lucide="corner-down-right" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> 
+                                ${r.mentor_name} replied to: "${r.question_title}"
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.5; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                                ${r.content}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary);">
+                                <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${r.created_at}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+            lucide.createIcons();
+        }
+
+        async function fetchResponses() {
+            const token = localStorage.getItem('auth_token');
+            const container = document.getElementById('responsesContainer');
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/student/responses', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    allResponses = await response.json();
+                    renderResponses();
+                } else {
+                    console.error('Failed to fetch responses');
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = 'login.html';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching responses:', error);
+                if (container) container.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--error-color);">Error loading responses.</p>';
+            }
+        }
+
+        // Fetch Data
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Auth Check
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            await fetchHeaderData();
+            await fetchResponses();
+
+            const searchInput = document.getElementById('searchResponse');
+            if (searchInput) {
+                searchInput.addEventListener('input', renderResponses);
+            }
+        });
+    </script>
+</body>
+
+</html>

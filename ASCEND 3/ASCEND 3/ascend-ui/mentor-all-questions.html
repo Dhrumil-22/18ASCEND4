@@ -189,6 +189,14 @@
                 }
             });
 
+            // Sort by bounty (points) in descending order
+            filtered.sort((a, b) => {
+                const bountyA = parseInt(a.bounty) || 0;
+                const bountyB = parseInt(b.bounty) || 0;
+                return bountyB - bountyA;
+            });
+
+
             container.innerHTML = '';
             if (filtered.length === 0) {
                 container.innerHTML = `
