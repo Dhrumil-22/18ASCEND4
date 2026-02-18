@@ -372,6 +372,9 @@
             </div>
 
         </div>
+
+        <!-- Footer -->
+        <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
     </main>
 
     <div id="systemStatus"
@@ -595,7 +598,6 @@
             div.className = `message-bubble ${isMe ? 'sent' : 'received'}`;
             div.innerHTML = `
                 ${msg.content}
-                <span class="message-time">${msg.timestamp}</span>
             `;
             area.appendChild(div);
         }
@@ -606,10 +608,9 @@
             const content = input.value.trim();
             if (!content) return;
 
-            // Optimistic Render
             renderMessage({
                 content: content,
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
                 is_me: true
             });
             input.value = '';

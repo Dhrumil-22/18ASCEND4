@@ -142,11 +142,11 @@
                     </div>
                 </div>
 
-            </div>
-            <!-- Footer -->
-            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
-        </div>
-        </div>
+            </div> <!-- End main-content -->
+        </div> <!-- End page-container -->
+
+        <!-- Footer -->
+        <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
     </main>
 
     <script src="js/navigation.js"></script>
@@ -252,6 +252,19 @@
                 }
             } catch (error) {
                 console.error('Error saving:', error);
+            }
+        });
+    </script>
+
+    <script>
+        // Move footer to the end of main-layout if it exists
+        document.addEventListener('DOMContentLoaded', () => {
+            const main = document.querySelector('main.main-layout');
+            if (main) {
+                const footer = document.createElement('div');
+                footer.id = 'footer-placeholder';
+                footer.setAttribute('data-src', 'dashboard-footer.html');
+                main.appendChild(footer);
             }
         });
     </script>

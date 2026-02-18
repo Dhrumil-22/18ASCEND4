@@ -253,17 +253,22 @@
                                     style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
                                     <span class="badge badge-secondary">Student</span>
                                 </div>
-
+                                <div style="color: var(--text-secondary); font-size: 14px; margin-top: 12px; line-height: 1.5;"
+                                    id="previewBio">
+                                    Your bio will appear here. Edit your profile to share your journey.</div>
+                                <div id="skillsBadges"
+                                    style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                                    <span class="badge">No skills added</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div> <!-- End main-content -->
+        </div> <!-- End page-container -->
 
-            </div>
-            <!-- Footer -->
-            <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
-        </div>
-
+        <!-- Footer -->
+        <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
     </main>
 
     <script src="js/navigation.js"></script>
@@ -423,6 +428,22 @@
             } catch (error) {
                 console.error('Error saving profile:', error);
                 alert('An error occurred: ' + error.message);
+            }
+        });
+    </script>
+
+    <script>
+        // Move footer to the end of main-layout if it exists
+        document.addEventListener('DOMContentLoaded', () => {
+            const main = document.querySelector('main.main-layout');
+            if (main) {
+                // Ensure main-content and page-container are closed if they weren't
+                // Wait, it's safer to just inject it before the body closing tag
+                // but we want it INSIDE main for the margin-left.
+                const footer = document.createElement('div');
+                footer.id = 'footer-placeholder';
+                footer.setAttribute('data-src', 'dashboard-footer.html');
+                main.appendChild(footer);
             }
         });
     </script>

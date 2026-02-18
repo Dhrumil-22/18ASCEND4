@@ -697,7 +697,7 @@ def get_messages(partner_id):
             'sender_id': m.sender_id,
             'recipient_id': m.recipient_id,
             'content': m.content,
-            'timestamp': m.created_at.strftime("%I:%M %p"),
+            'timestamp': m.created_at.isoformat(),
             'date': m.created_at.strftime("%Y-%m-%d"),
             'is_me': m.sender_id == current_user.id,
             'is_read': m.is_read
@@ -728,7 +728,7 @@ def send_message():
         'data': {
             'id': msg.id,
             'content': msg.content,
-            'timestamp': msg.created_at.strftime("%I:%M %p"),
+            'timestamp': msg.created_at.isoformat(),
             'is_me': True
         }
     }), 201
