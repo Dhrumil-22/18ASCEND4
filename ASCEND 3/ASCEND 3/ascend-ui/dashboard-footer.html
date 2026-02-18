@@ -1,61 +1,84 @@
 <footer class="dashboard-footer">
-    <div class="footer-content">
-        <div class="footer-brand">
-            <div class="footer-logo">
-                <i data-lucide="zap" style="width: 24px; height: 24px; color: var(--primary);"></i>
-                <span>ASCEND</span>
+    <div class="footer-top-gradient"></div>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="logo-icon-bg">
+                        <i data-lucide="zap" style="width: 20px; height: 20px; fill: #4DA3FF; color: #4DA3FF;"></i>
+                    </div>
+                    <span>ASCEND</span>
+                </div>
+                <p class="footer-tagline">Empowering the next generation of industry leaders through curated knowledge
+                    and direct mentorship.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link" title="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="social-link" title="LinkedIn"><i data-lucide="linkedin"></i></a>
+                    <a href="#" class="social-link" title="GitHub"><i data-lucide="github"></i></a>
+                </div>
             </div>
-            <p class="footer-tagline">Bridging the gap between education and industry excellence through mentorship.</p>
-            <div class="footer-social">
-                <a href="#" class="social-link"><i data-lucide="twitter" style="width: 18px; height: 18px;"></i></a>
-                <a href="#" class="social-link"><i data-lucide="linkedin" style="width: 18px; height: 18px;"></i></a>
-                <a href="#" class="social-link"><i data-lucide="github" style="width: 18px; height: 18px;"></i></a>
+
+            <div class="footer-links-grid">
+                <div class="footer-column">
+                    <h4>Discover</h4>
+                    <a href="career-exploration.html">Roadmaps</a>
+                    <a href="My-Mentor.html">Mentors</a>
+                    <a href="ask-question.html">Q&A</a>
+                    <a href="#">Resources</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Platform</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact Us</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Guidelines</a>
+                    <a href="#">Community</a>
+                    <a href="#">Feedback</a>
+                </div>
             </div>
         </div>
 
-        <div class="footer-links">
-            <div class="footer-column">
-                <h4>Platform</h4>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="mentees.html">My Mentors</a>
-                <a href="ask-question.html">Q&A</a>
-                <a href="career-exploration.html">Roadmaps</a>
-            </div>
-            <div class="footer-column">
-                <h4>Company</h4>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-                <a href="#">Careers</a>
-                <a href="#">Privacy Policy</a>
-            </div>
-            <div class="footer-column">
-                <h4>Resources</h4>
-                <a href="#">Blog</a>
-                <a href="#">Community</a>
-                <a href="#">Help Center</a>
-                <a href="#">Guidelines</a>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ASCEND. Designed for Excellence.</p>
+            <div class="footer-bottom-links">
+                <span class="status-indicator"><span class="dot"></span> Systems Operational</span>
             </div>
         </div>
-    </div>
-    <div class="footer-bottom">
-        &copy; 2026 ASCEND. All rights reserved.
     </div>
 </footer>
 
 <style>
-    /* Footer Styles */
     .dashboard-footer {
-        margin-top: 4rem;
-        padding-top: 3rem;
-        border-top: 1px solid var(--border-color);
-        color: var(--text-secondary);
+        position: relative;
+        background: #0f172a;
+        margin-top: 6rem;
+        padding-top: 4rem;
+        padding-bottom: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        color: #94a3b8;
+        overflow: hidden;
+    }
+
+    .footer-top-gradient {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, var(--primary) 50%, transparent 100%);
+        opacity: 0.3;
     }
 
     .footer-content {
         display: grid;
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 1.2fr 2fr;
         gap: 4rem;
-        margin-bottom: 3rem;
+        margin-bottom: 4rem;
     }
 
     .footer-brand {
@@ -71,14 +94,26 @@
         font-family: 'Orbitron', sans-serif;
         font-weight: 700;
         font-size: 1.5rem;
-        color: var(--text-primary);
+        color: #f8fafc;
+        letter-spacing: 1px;
+    }
+
+    .logo-icon-bg {
+        width: 36px;
+        height: 36px;
+        background: rgba(77, 163, 255, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(77, 163, 255, 0.2);
     }
 
     .footer-tagline {
         font-size: 0.95rem;
-        line-height: 1.6;
-        color: var(--text-secondary);
-        max-width: 300px;
+        line-height: 1.7;
+        color: #94a3b8;
+        max-width: 320px;
     }
 
     .footer-social {
@@ -87,67 +122,129 @@
     }
 
     .social-link {
-        width: 36px;
-        height: 36px;
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--text-secondary);
-        transition: all 0.2s;
+        color: #94a3b8;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .social-link i,
+    .social-link svg {
+        width: 20px;
+        height: 20px;
     }
 
     .social-link:hover {
         color: var(--primary);
-        border-color: var(--primary);
-        transform: translateY(-2px);
+        background: rgba(77, 163, 255, 0.1);
+        border-color: rgba(77, 163, 255, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(77, 163, 255, 0.1);
     }
 
-    .footer-links {
+    .footer-links-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
     }
 
     .footer-column h4 {
-        font-size: 1rem;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.875rem;
         font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 1.25rem;
-        font-family: 'Inter', sans-serif;
+        color: #f8fafc;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
 
     .footer-column a {
         display: block;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        margin-bottom: 0.75rem;
+        color: #64748b;
+        font-size: 0.9375rem;
+        margin-bottom: 1rem;
         text-decoration: none;
-        transition: color 0.2s;
+        transition: all 0.2s ease;
+        width: fit-content;
     }
 
     .footer-column a:hover {
         color: var(--primary);
+        padding-left: 4px;
     }
 
     .footer-bottom {
-        text-align: center;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 2.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
         font-size: 0.875rem;
-        color: var(--text-tertiary);
+        color: #475569;
     }
 
-    @media (max-width: 768px) {
-        .footer-content {
-            grid-template-columns: 1fr;
-            gap: 2rem;
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #10b981;
+        font-weight: 500;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
         }
 
-        .footer-links {
-            grid-template-columns: repeat(2, 1fr);
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        }
+
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .footer-tagline {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .footer-links-grid {
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
         }
     }
 </style>

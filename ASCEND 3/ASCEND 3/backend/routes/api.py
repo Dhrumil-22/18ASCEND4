@@ -461,21 +461,22 @@ def get_all_mentor_questions():
     if current_user.role not in ['mentor', 'alumni']:
         return jsonify({'error': 'Unauthorized'}), 403
 
-    # Fetch ALL questions that have NO replies (unanswered)
-    unanswered_questions = Question.query.outerjoin(Reply).filter(Reply.id == None).order_by(Question.created_at.desc()).all()
+    # Fetch ALL questions
+    questions = Question.query.order_by(Question.created_at.desc()).all()
     
     questions_data = []
-    for q in unanswered_questions:
+    for q in questions:
         author_name = q.author.profile_info.full_name if q.author.profile_info and q.author.profile_info.full_name else q.author.username
         questions_data.append({
             'id': q.id,
             'title': q.title,
             'content': q.content,
             'author': author_name,
-            'author_initials': author_name[:2].upper(),
+            'author_initials': author_name[:2].upper() if author_name else "??",
             'time': q.created_at.strftime("%Y-%m-%d"),
             'is_urgent': q.is_urgent,
-            'bounty': q.bounty
+            'bounty': q.bounty,
+            'is_answered': q.replies.count() > 0
         })
 
     return jsonify(questions_data)
