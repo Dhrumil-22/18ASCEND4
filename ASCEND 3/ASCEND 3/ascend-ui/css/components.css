@@ -331,19 +331,19 @@ textarea.input {
 }
 
 /* Collapsed Sidebar State */
-.sidebar.collapsed {
+body.sidebar-collapsed .sidebar {
     width: var(--sidebar-collapsed-width);
 }
 
 /* =========================================
-   Layout Expansion FIX (Explicit Sibling Selectors)
+   Layout Expansion FIX (Body Class Selectors)
    ========================================= */
-.sidebar.collapsed~.main-layout {
+body.sidebar-collapsed .main-layout {
     margin-left: var(--sidebar-collapsed-width) !important;
     transition: margin-left 0.3s ease;
 }
 
-.sidebar.collapsed~.header {
+body.sidebar-collapsed .header {
     left: var(--sidebar-collapsed-width) !important;
     transition: left 0.3s ease;
 }
@@ -351,33 +351,33 @@ textarea.input {
 /* ========================================= */
 
 /* Hide logo text when collapsed */
-.sidebar.collapsed .sidebar-logo-text {
+body.sidebar-collapsed .sidebar-logo-text {
     display: none;
 }
 
 /* Center logo icon */
-.sidebar.collapsed .sidebar-logo {
+body.sidebar-collapsed .sidebar-logo {
     justify-content: center;
     padding: 0;
 }
 
 /* Hide text labels but keep icons visible - be specific! */
-.sidebar.collapsed .sidebar-nav-item>span:not([data-lucide]) {
+body.sidebar-collapsed .sidebar .sidebar-nav-item>span:not([data-lucide]) {
     display: none;
 }
 
 /* Ensure icon elements stay visible */
-.sidebar.collapsed .sidebar-nav-item>i {
+body.sidebar-collapsed .sidebar .sidebar-nav-item>i {
     display: inline-flex !important;
 }
 
 /* Ensure Lucide SVG icons stay visible */
-.sidebar.collapsed .sidebar-nav-item>svg {
+body.sidebar-collapsed .sidebar .sidebar-nav-item>svg {
     display: inline-flex !important;
 }
 
 /* Center nav items */
-.sidebar.collapsed .sidebar-nav-item {
+body.sidebar-collapsed .sidebar .sidebar-nav-item {
     justify-content: center;
     padding: var(--space-3);
     margin: 0 var(--space-2);
@@ -385,14 +385,14 @@ textarea.input {
 }
 
 /* Active state in collapsed sidebar */
-.sidebar.collapsed .sidebar-nav-item.active {
+body.sidebar-collapsed .sidebar .sidebar-nav-item.active {
     border-left: none;
     background: rgba(77, 163, 255, 0.1);
     border-radius: var(--radius-md);
 }
 
 /* Footer adjustments */
-.sidebar.collapsed .sidebar-footer {
+body.sidebar-collapsed .sidebar-footer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -400,15 +400,15 @@ textarea.input {
 }
 
 /* Hide footer text labels */
-.sidebar.collapsed .sidebar-footer>div>span:not([data-lucide]) {
+body.sidebar-collapsed .sidebar-footer>div>span:not([data-lucide]) {
     display: none;
 }
 
 /* Ensure footer icons stay visible */
-.sidebar.collapsed .sidebar-footer>div>i,
-.sidebar.collapsed .sidebar-footer>div>svg,
-.sidebar.collapsed .sidebar-footer>a>i,
-.sidebar.collapsed .sidebar-footer>a>svg {
+body.sidebar-collapsed .sidebar-footer>div>i,
+body.sidebar-collapsed .sidebar-footer>div>svg,
+body.sidebar-collapsed .sidebar-footer>a>i,
+body.sidebar-collapsed .sidebar-footer>a>svg {
     display: inline-flex !important;
 }
 
@@ -436,7 +436,7 @@ textarea.input {
     transition: left 0.3s ease;
 }
 
-.sidebar.collapsed~* .header {
+body.sidebar-collapsed .header {
     left: var(--sidebar-collapsed-width);
 }
 

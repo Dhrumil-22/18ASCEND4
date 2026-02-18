@@ -59,36 +59,52 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Sidebar collapse functionality
-    const collapseBtn = document.getElementById('collapseBtn');
-    const sidebar = document.querySelector('.sidebar');
-    const mainLayout = document.querySelector('.main-layout');
-    const header = document.querySelector('.header');
+    // Sidebar collapse functionality (Enhanced with Event Delegation and Persistence)
+    const initSidebar = () => {
+        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (isCollapsed) {
+            document.body.classList.add('sidebar-collapsed');
+            // Initial Lucide check for collapsed state
+            setTimeout(() => applyCollapsedIconStyles(), 100);
+        }
+    };
 
-    if (collapseBtn) {
-        collapseBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-            const isCollapsed = sidebar.classList.contains('collapsed');
+    const applyCollapsedIconStyles = () => {
+        if (!document.body.classList.contains('sidebar-collapsed')) return;
+        if (window.lucide) {
+            lucide.createIcons();
+            const svgs = document.querySelectorAll('.sidebar svg');
+            svgs.forEach(svg => {
+                svg.style.minWidth = '20px';
+                svg.style.display = 'inline-flex';
+                svg.style.opacity = '1';
+                svg.style.visibility = 'visible';
+            });
+        }
+    };
+
+    // Use delegation so it works with dynamically loaded sidebars
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#collapseBtn');
+        if (btn) {
+            document.body.classList.toggle('sidebar-collapsed');
+            const nowCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', nowCollapsed);
 
             // Re-initialize Lucide icons after collapse animation
             setTimeout(() => {
                 if (window.lucide) {
                     lucide.createIcons();
-
-                    // FORCE icons visible with inline styles
-                    if (isCollapsed) {
-                        const svgs = document.querySelectorAll('.sidebar svg');
-                        svgs.forEach(svg => {
-                            svg.style.minWidth = '20px';
-                            svg.style.display = 'inline-flex';
-                            svg.style.opacity = '1';
-                            svg.style.visibility = 'visible';
-                        });
-                    }
+                    if (nowCollapsed) applyCollapsedIconStyles();
                 }
             }, 100);
-        });
-    }
+        }
+    });
+
+    // Expose for include-components.js if needed
+    window.initializeSidebarCollapse = initSidebar;
+    window.applyCollapsedIconStyles = applyCollapsedIconStyles;
+    initSidebar();
 
     // Mobile menu toggle
     const createMobileMenuToggle = () => {

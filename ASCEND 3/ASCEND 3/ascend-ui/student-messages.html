@@ -274,81 +274,52 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">
-                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
-            </div>
-            <div class="sidebar-logo-text">ASCEND</div>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="ask-question.html" class="sidebar-nav-item">
-                <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Ask Questions</span>
-            </a>
-            <a href="mentees.html" class="sidebar-nav-item">
-                <i data-lucide="user-check" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>My Mentors</span>
-            </a>
-            <a href="career-exploration.html" class="sidebar-nav-item">
-                <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>RoadMaps</span>
-            </a>
-            <a href="My-Mentor.html" class="sidebar-nav-item">
-                <i data-lucide="graduation-cap" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>All Mentors</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-nav-item" id="collapseBtn">
-                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Collapse</span>
-            </div>
-
-            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
-                <i data-lucide="log-out" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
-    </aside>
-
     <!-- Header -->
-    <header class="header">
-        <div class="dashboard-nav-group">
-            <a href="dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="contact.html" class="sidebar-nav-item ">
-                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>Contact Us</span>
-            </a>
-            <a href="about.html" class="sidebar-nav-item ">
-                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
-                <span>About Us</span>
-            </a>
+    <header class="header" style="justify-content: space-between; padding: 0 2rem;width: 100%;left: 0;">
+        <div class="header-logo" style="display: flex; align-items: center; gap: 10px;">
+            <div
+                style="width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="zap" style="width: 24px; height: 24px; fill: #4DA3FF; color: #4DA3FF;"></i>
+            </div>
+            <div
+                style="font-family: 'Orbitron', sans-serif; font-size: 1.125rem; font-weight: 700; letter-spacing: 1px;">
+                ASCEND</div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <button onclick="window.location.href='student-messages.html'"
-                style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
-                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
-            </button>
-            <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
-                <div class="header-user-info">
-                    <div class="header-user-name">Loading...</div>
-                    <div class="header-user-role">Student</div>
+            <div class="dashboard-nav-group" style="left: 50%;">
+                <a href="dashboard.html" class="sidebar-nav-item">
+                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="contact.html" class="sidebar-nav-item ">
+                    <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                    <span>Contact Us</span>
+                </a>
+                <a href="about.html" class="sidebar-nav-item ">
+                    <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                    <span>About Us</span>
+                </a>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <button onclick="window.location.href='student-messages.html'"
+                    style="background: none; border: none; color: #4da3ff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                    <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+                </button>
+                <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+                    <div class="header-user-info">
+                        <div class="header-user-name">Loading...</div>
+                        <div class="header-user-role">Student</div>
+                    </div>
+                    <div class="avatar avatar-md"></div>
                 </div>
-                <div class="avatar avatar-md"></div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="main-layout" style="padding-top: 80px; height: 100vh; overflow: hidden; width: auto;">
+    <main style="padding-top: 80px; height: 100vh; overflow: hidden; width: 100%;">
         <div class="page-container" style="height: 100%; padding-bottom: 0;">
 
             <div class="chat-container">

@@ -17,6 +17,11 @@ async function loadComponent(elementId, filePath) {
             window.lucide.createIcons();
         }
 
+        // Apply sidebar collapsed styles if needed
+        if (window.applyCollapsedIconStyles) {
+            window.applyCollapsedIconStyles();
+        }
+
         // Highlight active link
         highlightActiveLink();
 
