@@ -133,6 +133,7 @@ textarea.input {
     border-radius: var(--radius-lg);
     resize: vertical;
     min-height: 120px;
+    margin-bottom: 15px;
 }
 
 /* Badges */

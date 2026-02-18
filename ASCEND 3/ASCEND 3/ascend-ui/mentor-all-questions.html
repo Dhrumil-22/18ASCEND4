@@ -204,8 +204,9 @@
                         <i data-lucide="zap" style="width: 10px; height: 10px;"></i> ${q.bounty} pts
                     </span>` : '';
 
-                const cardStyle = q.is_urgent ? 'background: rgba(255, 215, 0, 0.05);' : '';
+                const cardStyle = q.is_urgent ? '' : '';
                 const avatarStyle = q.is_urgent ? 'border: 1px solid #FFD700; color: #FFD700;' : 'border: 1px solid var(--border-color);';
+                const buttonStyle = q.is_urgent ? 'background: #FFD700; color: #000; border: none;' : 'background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%); color: #ffffff; border: none;';
 
                 const html = `
                     <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; ${cardStyle}">
@@ -221,7 +222,7 @@
                                 <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-sm" onclick="window.location.href='mentor-question-detail.html?id=${q.id}'">Answer</button>
+                        <button class="btn btn-primary btn-sm" style="${buttonStyle}" onclick="window.location.href='mentor-question-detail.html?id=${q.id}'">Answer</button>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', html);
