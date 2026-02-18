@@ -16,6 +16,59 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Dashboard Header Styles */
+        .header {
+            justify-content: flex-end;
+            position: fixed;
+            /* Ensure context */
+        }
+
+        .dashboard-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* Decreased padding between buttons */
+            position: absolute;
+            left: 45%;
+            transform: translateX(-50%);
+        }
+
+        /* Ensure nav items inside the group behave correctly */
+        .dashboard-nav-group .sidebar-nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important;
+            /* Override global sidebar active styles */
+            border: none !important;
+            margin: 0 !important;
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            /* Hover animation */
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-nav-group .sidebar-nav-item:active {
+            transform: scale(0.95);
+            /* Click animation */
+        }
+
+        .dashboard-nav-group .sidebar-nav-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,31 +76,29 @@
     <aside class="sidebar">
         <div class="sidebar-logo">
             <div class="sidebar-logo-icon">
-                <i data-lucide="zap" style="width: 25px; height: 25px;"></i>
+                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
             </div>
             <div class="sidebar-logo-text">ASCEND</div>
         </div>
 
         <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-nav-item">
-                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="ask-question.html" class="sidebar-nav-item ">
+
+            <a href="ask-question.html" class="sidebar-nav-item active">
                 <i data-lucide="message-circle" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Ask Question</span>
+                <span>Ask Questions</span>
+            </a>
+            <a href="mentees.html" class="sidebar-nav-item">
+                <i data-lucide="user-check" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+
+                <span>My Mentors</span>
             </a>
             <a href="career-exploration.html" class="sidebar-nav-item">
                 <i data-lucide="compass" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Career Exploration</span>
+                <span>RoadMaps</span>
             </a>
-            <a href="discussion.html" class="sidebar-nav-item active">
-                <i data-lucide="users" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>Discussion</span>
-            </a>
-            <a href="profile.html" class="sidebar-nav-item">
-                <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
-                <span>My Profile</span>
+            <a href="My-Mentor.html" class="sidebar-nav-item">
+                <i data-lucide="graduation-cap" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>All Mentors</span>
             </a>
         </nav>
 
@@ -66,27 +117,40 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="header-search">
-            <div class="input-icon">
-                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
-                <input type="text" class="input" placeholder="Search...">
+        <div class="dashboard-nav-group">
+            <a href="dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="contact.html" class="sidebar-nav-item ">
+                <i data-lucide="mail" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>Contact Us</span>
+            </a>
+            <a href="about.html" class="sidebar-nav-item ">
+                <i data-lucide="info" style="width: 18px; height: 18px; stroke-width: 2;"></i>
+                <span>About Us</span>
+            </a>
+            <div class="sidebar-nav-item"
+                style="cursor: default; border: 1px solid rgba(255, 215, 0, 0.2); background: rgba(255, 215, 0, 0.05) !important;">
+                <i data-lucide="star"
+                    style="width: 18px; height: 18px; stroke-width: 2; color: #FFD700; fill: rgba(255, 215, 0, 0.5);"></i>
+                <span style="color: #FFD700; font-weight: 600;" id="headerPoints">...</span>
+                <span style="font-size: 0.75em; margin-left: 4px; color: var(--text-tertiary);">PTS</span>
             </div>
         </div>
 
-        <div class="header-actions">
-            <button class="btn btn-secondary btn-sm">
-                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <button onclick="window.location.href='student-messages.html'"
+                style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
             </button>
-            <button class="btn btn-primary" onclick="window.location.href='ask-question.html'">
-                <i data-lucide="zap" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
-                Ask Question
-            </button>
-            <div class="header-user">
+
+            <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
                 <div class="header-user-info">
-                    <div class="header-user-name">Alex Johnson</div>
+                    <div class="header-user-name">Loading...</div>
                     <div class="header-user-role">Student</div>
                 </div>
-                <div class="avatar avatar-md">AJ</div>
+                <div class="avatar avatar-md"></div>
             </div>
         </div>
     </header>
@@ -95,10 +159,10 @@
         <div class="page-container">
             <div class="main-content">
                 <div class="page-header">
-                    <a href="My-Mentor.html"
+                    <a href="ask-question.html"
                         style="color: var(--text-secondary); display: flex; align-items: center; margin-bottom: 1rem;">
                         <i data-lucide="arrow-left" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Back
-                        to My Mentor
+                        to All Question
                     </a>
                     <h1 class="page-title" id="questionTitle">Loading...</h1>
                 </div>
@@ -141,8 +205,50 @@
     <script>
         lucide.createIcons();
 
+        async function fetchHeaderData() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+
+            try {
+                // Reuse dashboard API for points/name
+                const response = await fetch('http://127.0.0.1:5000/api/dashboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update Header User Profile
+                    const headerName = document.querySelector('.header-user-name');
+                    if (headerName) headerName.textContent = data.user_name;
+
+                    // Update Points
+                    const headerPoints = document.getElementById('headerPoints');
+                    if (headerPoints && data.points !== undefined) headerPoints.textContent = data.points;
+
+                    const headerAvatar = document.querySelector('.header-user .avatar');
+                    if (headerAvatar && data.user_name) {
+                        const parts = data.user_name.trim().split(' ');
+                        let initials = parts[0][0];
+                        if (parts.length > 1) {
+                            initials += parts[1][0];
+                        }
+                        headerAvatar.textContent = initials.toUpperCase();
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching header data:", error);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            await fetchHeaderData();
             const user = JSON.parse(localStorage.getItem('user'));
             const role = user ? user.role : 'student';
 

@@ -248,12 +248,19 @@
             </div>
         </div>
 
-        <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
-            <div class="header-user-info">
-                <div class="header-user-name">Loading...</div>
-                <div class="header-user-role">Student</div>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <button onclick="window.location.href='student-messages.html'"
+                style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 0.5rem; display: flex; align-items: center; transition: color 0.2s;">
+                <i data-lucide="message-square" style="width: 20px; height: 20px;"></i>
+            </button>
+
+            <div class="header-user" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+                <div class="header-user-info">
+                    <div class="header-user-name">Loading...</div>
+                    <div class="header-user-role">Student</div>
+                </div>
+                <div class="avatar avatar-md"></div>
             </div>
-            <div class="avatar avatar-md"></div>
         </div>
     </header>
 
