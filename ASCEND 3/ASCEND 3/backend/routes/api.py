@@ -374,9 +374,9 @@ def get_mentor_dashboard():
     requests_count = MentorshipRequest.query.filter_by(mentor_id=current_user.id, status='pending').count()
     sessions_count = 0 # Placeholder as Session model doesn't exist yet
     
-    # Fetch questions that have NO replies (unanswered)
+    # Fetch questions that have NO replies (unanswered) AND are NOT urgent
     # Using a left outer join to find questions with no replies
-    unanswered_questions = Question.query.outerjoin(Reply).filter(Reply.id == None).order_by(Question.created_at.desc()).limit(5).all()
+    unanswered_questions = Question.query.outerjoin(Reply).filter(Reply.id == None, Question.is_urgent != True).order_by(Question.created_at.desc()).limit(5).all()
     
     questions_data = []
     for q in unanswered_questions:
@@ -384,9 +384,9 @@ def get_mentor_dashboard():
         questions_data.append({
             'id': q.id,
             'title': q.title,
-            'content': q.content,
-            'author': author_name,
-            'author_initials': author_name[:2].upper(),
+            'content': q.content if q.content else "",
+            'author': author_name if author_name else "Unknown",
+            'author_initials': (author_name[:2].upper()) if author_name else "??",
             'time': q.created_at.strftime("%Y-%m-%d")
         })
 
@@ -399,9 +399,9 @@ def get_mentor_dashboard():
         urgent_data.append({
             'id': q.id,
             'title': q.title,
-            'content': q.content,
-            'author': author_name,
-            'author_initials': author_name[:2].upper(),
+            'content': q.content if q.content else "",
+            'author': author_name if author_name else "Unknown",
+            'author_initials': (author_name[:2].upper()) if author_name else "??",
             'time': q.created_at.strftime("%Y-%m-%d"),
             'bounty': q.bounty
         })

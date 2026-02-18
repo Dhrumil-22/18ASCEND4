@@ -327,140 +327,133 @@
         });
 
         // Fetch Dashboard Data
+        const token = localStorage.getItem('auth_token');
+        const userStr = localStorage.getItem('user');
+
         document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('auth_token');
-            const userStr = localStorage.getItem('user');
-            let user = null;
-
-            try {
-                if (userStr) user = JSON.parse(userStr);
-            } catch (e) {
-                console.error("Failed to parse user from localStorage");
-            }
-
             if (!token) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Immediate User Info update from localStorage to prevent flickering
-            if (user) {
-                const displayName = user.name || user.username || user.user_name || 'Mentor';
-
-                // Update Welcome Message
-                const mentorNameSpan = document.getElementById('mentorNamePlaceholder');
-                if (mentorNameSpan) mentorNameSpan.textContent = displayName;
-
-                // Update Header
-                const headerName = document.querySelector('.header-user-name');
-                if (headerName) headerName.textContent = displayName;
-
-                const headerAvatar = document.querySelector('.header-user .avatar');
-                if (headerAvatar) {
-                    headerAvatar.textContent = displayName.substring(0, 2).toUpperCase();
+            // User Info Setup
+            let user = null;
+            try {
+                if (userStr) {
+                    user = JSON.parse(userStr);
+                    const displayName = user.name || user.username || 'Mentor';
+                    document.getElementById('mentorNamePlaceholder').textContent = displayName;
+                    document.querySelector('.header-user-name').textContent = displayName;
+                    document.querySelector('.header-user .avatar').textContent = displayName.substring(0, 2).toUpperCase();
                 }
+            } catch (e) {
+                console.error("User parse error", e);
             }
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/mentor/dashboard', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                // 1. Fetch Dashboard Stats
+                const dashboardResp = await fetch('http://127.0.0.1:5000/api/mentor/dashboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-
-                    // Update Welcome Message
-                    const mentorNameSpan = document.getElementById('mentorNamePlaceholder');
-                    if (mentorNameSpan) mentorNameSpan.textContent = data.user_name || 'Mentor';
-
-                    const headerName = document.querySelector('.header-user-name');
-                    if (headerName) headerName.textContent = data.user_name;
-
-                    const headerAvatar = document.querySelector('.header-user .avatar');
-                    if (headerAvatar && data.user_name) {
-                        headerAvatar.textContent = data.user_name.substring(0, 2).toUpperCase();
-                    }
+                if (dashboardResp.ok) {
+                    const data = await dashboardResp.json();
 
                     // Update Stats
-                    document.getElementById('statPending').textContent = data.questions ? data.questions.length : 0;
-                    document.getElementById('statRequests').textContent = data.stats.requests;
-                    document.getElementById('statConnections').textContent = data.stats.mentees;
+                    const statPending = document.getElementById('statPending');
+                    if (statPending) statPending.textContent = data.questions ? data.questions.length : 0;
 
-                    // Render Urgent Questions
+                    const statRequests = document.getElementById('statRequests');
+                    if (statRequests) statRequests.textContent = data.stats.requests;
+
+                    const statConnections = document.getElementById('statConnections');
+                    if (statConnections) statConnections.textContent = data.stats.mentees;
+
+                } else {
+                    console.error("Dashboard stats fetch failed");
+                }
+
+                // 2. Fetch Questions (Using the same endpoint as All Questions Page for consistency)
+                const questionsResp = await fetch('http://127.0.0.1:5000/api/mentor/questions', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (questionsResp.ok) {
+                    const allQuestions = await questionsResp.json();
+
+                    // Filter Urgent and General
+                    const urgentQuestions = allQuestions.filter(q => q.is_urgent);
+                    const generalQuestions = allQuestions.filter(q => !q.is_urgent);
+
+                    // Render Urgent Questions (Top 5)
                     const urgentContainer = document.getElementById('urgentQuestionsContainer');
                     urgentContainer.innerHTML = '';
-                    if (!data.urgent_questions || data.urgent_questions.length === 0) {
+                    if (urgentQuestions.length === 0) {
                         urgentContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No urgent questions at the moment.</p>';
                     } else {
-                        data.urgent_questions.forEach(q => {
-                            // Escape single quotes for the function call
-                            const safeContent = q.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                        urgentQuestions.slice(0, 5).forEach(q => {
                             const html = `
                                 <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start; background: rgba(255, 215, 0, 0.05);">
-                                    <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid #FFD700; color: #FFD700;">${q.author_initials}</div>
+                                    <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid #FFD700; color: #FFD700;">${q.author_initials || '??'}</div>
                                     <div style="flex: 1;">
                                         <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; color: #FFD700;">
                                             <i data-lucide="zap" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> 
                                             ${q.title}
                                             <span style="font-size: 0.75rem; background: #FFD700; color: #000; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${q.bounty} pts</span>
                                         </div>
-                                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content}</div>
+                                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content || ''}</div>
                                         <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary);">
-                                            <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author}</span>
+                                            <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author || 'Unknown'}</span>
                                             <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary btn-sm" style="background: #FFD700; color: #000; border: none;" onclick="openAnswerModal(${q.id}, '${safeContent}')">Answer Now</button>
+                                    <button class="btn btn-primary btn-sm" style="background: #FFD700; color: #000; border: none;" onclick="window.location.href='mentor-question-detail.html?id=${q.id}'">Answer Now</button>
                                 </div>
                             `;
                             urgentContainer.insertAdjacentHTML('beforeend', html);
                         });
                     }
 
-                    // Render Questions (Unanswered in main column)
+                    // Render Requests/General Questions (Top 5)
                     const questionsContainer = document.getElementById('questionsContainer');
                     questionsContainer.innerHTML = '';
-                    if (!data.questions || data.questions.length === 0) {
+                    if (generalQuestions.length === 0) {
                         questionsContainer.innerHTML = '<p style="padding: 2.5rem; text-align: center; color: var(--text-secondary); font-style: italic;">No new unanswered questions.</p>';
                     } else {
-                        data.questions.forEach(q => {
-                            // Escape single quotes for the function call
-                            const safeContent = q.content.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                        generalQuestions.slice(0, 5).forEach(q => {
                             const html = `
                                 <div style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: flex-start;">
-                                    <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">${q.author_initials}</div>
+                                    <div class="avatar avatar-md" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">${q.author_initials || '??'}</div>
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 500; font-size: 1rem; margin-bottom: 0.25rem;">${q.title}</div>
-                                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content}</div>
+                                        <div style="font-weight: 500; font-size: 1rem; margin-bottom: 0.25rem;">${q.title || 'Untitled'}</div>
+                                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">${q.content || ''}</div>
                                         <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: var(--text-tertiary);">
-                                            <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author}</span>
+                                            <span><i data-lucide="user" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.author || 'Unknown'}</span>
                                             <span><i data-lucide="clock" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i> ${q.time}</span>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary btn-sm" onclick="openAnswerModal(${q.id}, '${safeContent}')">Answer</button>
+                                    <button class="btn btn-primary btn-sm" onclick="window.location.href='mentor-question-detail.html?id=${q.id}'">Answer</button>
                                 </div>
                             `;
                             questionsContainer.insertAdjacentHTML('beforeend', html);
                         });
                     }
 
-                    // Render Recent Messages (Side Column) - Reusing questions data for now as per request
+                    // Render Recent Messages (Side Column) - Use general questions as fallback
                     const recentMessagesFeed = document.getElementById('recentMessagesFeed');
                     recentMessagesFeed.innerHTML = '';
-                    const recentMessages = data.questions ? data.questions.slice(0, 3) : []; // Show simplified view of same questions
+                    const recentActivity = generalQuestions.slice(0, 3);
 
-                    if (recentMessages.length === 0) {
+                    if (recentActivity.length === 0) {
                         recentMessagesFeed.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No recent messages.</p>';
                     } else {
-                        recentMessages.forEach(q => {
+                        recentActivity.forEach(q => {
                             const html = `
                                 <div class="activity-item">
                                     <div class="activity-dot"></div>
                                     <div>
-                                        <div style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary);">${q.author}</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${q.title}</div>
+                                        <div style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary);">${q.author || 'Unknown'}</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${q.title || 'Untitled'}</div>
                                         <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.25rem;">${q.time}</div>
                                     </div>
                                 </div>
@@ -469,17 +462,16 @@
                         });
                     }
 
-                    // Re-init icons for new content
                     lucide.createIcons();
 
                 } else {
-                    console.error('Failed to load dashboard data');
-                    if (response.status === 401 || response.status === 403) {
-                        window.location.href = 'login.html';
-                    }
+                    console.error('Failed to load questions');
+                    document.getElementById('questionsContainer').innerHTML = '<p style="color:red; text-align:center; padding: 2rem;">Failed to load questions data.</p>';
                 }
+
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
+                alert("Error loading dashboard: " + error.message);
             }
         });
     </script>
