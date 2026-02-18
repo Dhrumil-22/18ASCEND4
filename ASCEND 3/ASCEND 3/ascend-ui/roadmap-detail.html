@@ -155,7 +155,43 @@
     <script>
         lucide.createIcons();
 
+        // Helper to set sidebar active state manually since URL doesn't match
+        function setSidebarActive() {
+            // Check multiple times because sidebar is loaded dynamically
+            let attempts = 0;
+            const maxAttempts = 20; // Try for 2 seconds (20 * 100ms)
+
+            const checkInterval = setInterval(() => {
+                // Determine which link should be active. 
+                // For student roadmap detail, it should be "career-exploration.html"
+                const roadmapsLink = document.querySelector('a[href="career-exploration.html"]');
+                attempts++;
+
+                if (roadmapsLink) {
+                    // Remove active from any other item (like Dashboard if it defaults)
+                    document.querySelectorAll('.sidebar-nav-item').forEach(el => el.classList.remove('active'));
+
+                    // Add to roadmaps link
+                    roadmapsLink.classList.add('active');
+
+                    // Force style application just in case
+                    roadmapsLink.style.color = 'var(--primary)';
+                    roadmapsLink.style.fontWeight = '600';
+                    const icon = roadmapsLink.querySelector('svg');
+                    if (icon) icon.style.stroke = 'var(--primary)';
+
+                    clearInterval(checkInterval);
+                }
+
+                if (attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                }
+            }, 100);
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
+            setSidebarActive();
+
             const token = localStorage.getItem('auth_token');
             const urlParams = new URLSearchParams(window.location.search);
             const roadmapId = urlParams.get('id');

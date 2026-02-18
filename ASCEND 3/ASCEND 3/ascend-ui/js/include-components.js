@@ -61,6 +61,16 @@ async function updateUserProfile() {
                 if (data.user_name) {
                     applyProfileData(data.user_name);
 
+                    // Update Points if available
+                    if (data.points !== undefined) {
+                        const navPoints = document.getElementById('navHeaderPoints');
+                        if (navPoints) navPoints.textContent = data.points;
+
+                        // Also try to update dashboard specific one if it exists and wasn't caught
+                        const dashboardPoints = document.getElementById('headerPoints');
+                        if (dashboardPoints) dashboardPoints.textContent = data.points;
+                    }
+
                     // Sync back to localStorage if possible
                     if (userStr) {
                         const user = JSON.parse(userStr);
