@@ -20,36 +20,58 @@
 </head>
 
 <body>
-
-    <!-- Header -->
-    <header class="header" style="left: 0;">
-        <div class="sidebar-logo" style="margin-bottom: 0; padding: 0;">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
             <div class="sidebar-logo-icon">
-                <i data-lucide="zap" style="width: 25px; height: 25px; fill: #4DA3FF; color: #4DA3FF;"></i>
+                <i data-lucide="zap" style="width: 25px; height: 25px;"></i>
             </div>
             <div class="sidebar-logo-text">ASCEND</div>
         </div>
-
-        <nav class="dashboard-nav-group"
-            style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 2rem; align-items: center;">
-            <a href="admin-dashboard.html" class="sidebar-nav-item"
-                style="margin: 0; border: none; background: transparent; display: flex; align-items: center; gap: 8px; color: var(--text-secondary); text-decoration: none;">
-                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
+        <nav class="sidebar-nav">
+            <a href="admin-dashboard.html" class="sidebar-nav-item">
+                <i data-lucide="layout-dashboard" style="width: 20px; height: 20px;"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="admin-users.html" class="sidebar-nav-item"
-                style="margin: 0; border: none; background: transparent; display: flex; align-items: center; gap: 8px; color: var(--text-secondary); text-decoration: none;">
-                <i data-lucide="users" style="width: 18px; height: 18px;"></i>
+            <a href="admin-users.html" class="sidebar-nav-item">
+                <i data-lucide="users" style="width: 20px; height: 20px;"></i>
                 <span>Manage Users</span>
             </a>
-            <a href="admin-reports.html" class="sidebar-nav-item"
-                style="margin: 0; border: none; background: transparent; display: flex; align-items: center; gap: 8px; color: var(--text-secondary); text-decoration: none;">
-                <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i>
-                <span>Queries</span>
+            <a href="admin-content.html" class="sidebar-nav-item">
+                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+                <span>Content</span>
+            </a>
+            <a href="admin-settings.html" class="sidebar-nav-item active">
+                <i data-lucide="settings" style="width: 20px; height: 20px;"></i>
+                <span>Settings</span>
             </a>
         </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-nav-item" id="collapseBtn">
+                <i data-lucide="chevron-left" style="width: 20px; height: 20px; stroke-width: 1.5;"></i>
+                <span>Collapse</span>
+            </div>
 
-        <div class="header-actions" style="margin-left: auto;">
+            <a href="login.html" class="sidebar-nav-item" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-search">
+            <div class="input-icon">
+                <span data-lucide="search" style="width: 18px; height: 18px; stroke-width: 1.5;"></span>
+                <input type="text" class="input" placeholder="Search settings...">
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn btn-secondary btn-sm">
+                <i data-lucide="bell" style="width: 18px; height: 18px; stroke-width: 1.5;"></i>
+            </button>
             <div class="header-user">
                 <div class="header-user-info">
                     <div class="header-user-name" id="userNameDisplay">Admin</div>
@@ -57,15 +79,11 @@
                 </div>
                 <div class="avatar avatar-md" id="userAvatar">AD</div>
             </div>
-            <a href="login.html" class="btn btn-secondary btn-sm" id="logoutBtn"
-                style="background: none; border: 1px solid var(--border-color); color: var(--text-secondary); text-decoration: none;">
-                <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
-            </a>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="main-layout" style="margin-left: 0;">
+    <main class="main-layout">
         <div class="page-container">
             <div class="main-content">
                 <div class="page-header">
@@ -84,7 +102,6 @@
         <div id="footer-placeholder" data-src="dashboard-footer.html"></div>
     </main>
 
-    <script src="js/include-components.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/auth-guard.js"></script>
     <script>
