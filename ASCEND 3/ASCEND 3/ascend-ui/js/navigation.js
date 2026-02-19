@@ -99,6 +99,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 100);
         }
+
+        // Logout functionality
+        const logoutBtn = e.target.closest('#logoutBtn');
+        if (logoutBtn) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('auth_token');
+                window.location.href = 'login.html';
+            }
+        }
     });
 
     // Expose for include-components.js if needed
